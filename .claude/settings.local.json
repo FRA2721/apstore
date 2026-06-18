@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.apstore.net)",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\ApStore\\\\css\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\ApStore\\\\js\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\ApStore\\\\assets\")",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\USER\\\\Desktop\\\\ApStore\\\\\" -Recurse -File | Select-Object Name, @{N='Size';E={[math]::Round\\($_.Length/1KB,1\\)+'KB'}} | Format-Table -AutoSize)",
+      "WebFetch(domain:lusion.co)",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__browser_batch",
+      "mcp__Claude_in_Chrome__javascript_tool",
+      "Bash(cd \"C:\\\\Users\\\\USER\\\\Desktop\\\\ApStore\" && mkdir -p .claude)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where node *)",
+      "Bash(where python *)",
+      "Bash(where python3 *)",
+      "Bash(where py *)",
+      "Bash(start \"\" \"C:\\\\Users\\\\USER\\\\Downloads\\\\clip video .mp4\")",
+      "Bash(start \"\" \"http://localhost:3000/catalogo.html\")",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(cd \"/c/Users/USER/Desktop/ApStore\" && grep -n \"introWord\" catalogo.html | head -3 && grep -n \"introWord\" registrati.html | head -3)",
+      "Bash(ffmpeg -i \"C:\\\\Users\\\\USER\\\\Downloads\\\\Registrazione 2026-06-18 003926.mp4\" -ss 00:00:01 -vframes 1 \"C:\\\\Users\\\\USER\\\\Downloads\\\\frame_slot.png\" -y)",
+      "PowerShell(Add-Type -AssemblyName PresentationCore; $player = New-Object System.Windows.Media.MediaPlayer; $uri = [System.Uri]\"C:\\\\Users\\\\USER\\\\Downloads\\\\Registrazione 2026-06-18 003926.mp4\"; $player.Open\\($uri\\); Start-Sleep -Seconds 2; Write-Host \"Duration: $\\($player.NaturalDuration\\)\")",
+      "Bash(del \"C:\\\\Users\\\\USER\\\\Desktop\\\\ApStore\\\\admin.html\")",
+      "WebFetch(domain:api.github.com)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git config *)"
+    ]
+  }
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Articolo — ApStore Blog</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══════════════ INTRO SPLASH ══════════════ -->
+<div id="introSplash" style="position:fixed;inset:0;z-index:9999;background:#0a0a14;display:flex;align-items:center;justify-content:center;pointer-events:all;">
+  <div id="introWord" style="font-family:'Google Sans','Helvetica Neue',Arial,sans-serif;font-size:clamp(4rem,18vw,16rem);font-weight:200;letter-spacing:-.04em;line-height:.9;color:#fff;opacity:0;">Blog</div>
+</div>
+<style>
+@keyframes introFadeIn  { from{opacity:0;transform:translateX(0)} to{opacity:1;transform:translateX(0)} }
+@keyframes introFadeOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(-18vw)} }
+</style>
+<script>
+(function(){
+  const splash=document.getElementById('introSplash'),word=document.getElementById('introWord');
+  word.style.animation='introFadeIn .7s cubic-bezier(.16,1,.3,1) .15s forwards';
+  setTimeout(()=>{
+    word.style.animation='introFadeOut .6s cubic-bezier(.7,0,.84,0) forwards';
+    setTimeout(()=>{
+      splash.style.transition='opacity .65s cubic-bezier(.16,1,.3,1)';
+      splash.style.opacity='0';
+      setTimeout(()=>{ splash.style.display='none'; },680);
+    },1050);
+  },2000);
+})();
+</script>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav class="l-nav" id="lNav">
+  <a href="index.html" class="l-logo">Ap<span>Store</span></a>
+  <div class="l-nav-right">
+    <a href="carrello.html" class="l-cart-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="l-cart-count" id="cartBadge" style="display:none">0</span>
+    </a>
+    <a href="catalogo.html" class="l-btn-dark">Shop →</a>
+    <button class="l-btn-light" onclick="toggleMenu()">Menu ••</button>
+  </div>
+</nav>
+
+<!-- ══════════════ MENU OVERLAY ══════════════ -->
+<div class="l-menu" id="lMenu">
+  <div class="l-menu-header">
+    <a href="index.html" class="l-menu-logo" onclick="toggleMenu()">Ap<span>Store</span></a>
+    <button class="l-menu-close" onclick="toggleMenu()">✕ Chiudi</button>
+  </div>
+  <div class="l-menu-links">
+    <a href="index.html" class="l-menu-link" onclick="toggleMenu()">Home <span>01</span></a>
+    <a href="catalogo.html" class="l-menu-link" onclick="toggleMenu()">Products <span>02</span></a>
+    <a href="blog.html" class="l-menu-link" onclick="toggleMenu()">Blog <span>03</span></a>
+    <a href="login.html" class="l-menu-link" onclick="toggleMenu()">Account <span>04</span></a>
+    <a href="carrello.html" class="l-menu-link" onclick="toggleMenu()">Carrello <span>05</span></a>
+  </div>
+  <div class="l-menu-footer">
+    <a href="https://sellpilot.it" target="_blank">↗ SellPilot.it</a>
+    <span style="color:rgba(255,255,255,.15)">·</span>
+    <a href="registrati.html" onclick="toggleMenu()">Registrati</a>
+  </div>
+</div>
+
+<div class="container" style="padding:120px 24px 64px;max-width:1100px;">
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start;">
+
+    <!-- Article -->
+    <article>
+      <div class="breadcrumb" style="margin-bottom:24px;font-size:.8rem;color:var(--text-muted);">
+        <a href="index.html" style="color:var(--indigo)">Home</a><span>›</span>
+        <a href="blog.html"  style="color:var(--indigo)">Blog</a><span>›</span>
+        <span id="artCatBC">Articolo</span>
+      </div>
+
+      <!-- Hero image -->
+      <div id="artHero" style="border-radius:var(--radius-lg);height:280px;display:flex;align-items:center;justify-content:center;font-size:8rem;margin-bottom:28px;"></div>
+
+      <!-- Meta -->
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+        <span id="artTag" style="background:var(--indigo-soft);color:var(--indigo);font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px;"></span>
+        <span id="artDate" style="font-size:.8rem;color:var(--text-muted);"></span>
+        <span style="color:var(--border);">·</span>
+        <span id="artRead" style="font-size:.8rem;color:var(--text-muted);"></span>
+      </div>
+
+      <h1 id="artTitle" style="font-size:1.75rem;font-weight:800;color:var(--text-dark);line-height:1.3;margin-bottom:24px;letter-spacing:-.3px;"></h1>
+
+      <div id="artBody" style="color:var(--text-body);line-height:1.9;font-size:.92rem;"></div>
+
+      <!-- Tags -->
+      <div style="margin-top:36px;padding-top:20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:.8rem;font-weight:700;color:var(--text-muted);">Tag:</span>
+        <div id="artTags"></div>
+      </div>
+
+      <!-- Share -->
+      <div style="margin-top:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:.82rem;font-weight:700;color:var(--text-dark);">Condividi:</span>
+        <button onclick="share('Facebook')"  style="background:#1877f2;color:#fff;padding:7px 14px;border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;border:none;cursor:pointer;">Facebook</button>
+        <button onclick="share('X')"         style="background:#000;color:#fff;padding:7px 14px;border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;border:none;cursor:pointer;">X / Twitter</button>
+        <button onclick="share('LinkedIn')"  style="background:#0077b5;color:#fff;padding:7px 14px;border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;border:none;cursor:pointer;">LinkedIn</button>
+        <button onclick="copyLink()"         style="background:var(--bg);color:var(--text-body);padding:7px 14px;border-radius:var(--radius-sm);font-size:.78rem;font-weight:700;border:1px solid var(--border);cursor:pointer;">🔗 Copia link</button>
+      </div>
+
+      <!-- Related products -->
+      <div style="margin-top:48px;">
+        <div class="section-header" style="margin-bottom:20px;">
+          <h3 class="section-title" style="font-size:1.1rem;">Prodotti correlati</h3>
+          <a href="catalogo.html" class="see-all" style="font-size:.78rem;">Vedi tutti →</a>
+        </div>
+        <div class="products-grid" id="artProds" style="grid-template-columns:repeat(2,1fr);"></div>
+      </div>
+    </article>
+
+    <!-- Sidebar -->
+    <aside style="position:sticky;top:80px;display:flex;flex-direction:column;gap:20px;">
+
+      <!-- Author -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--indigo);color:#fff;font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">FC</div>
+        <div style="font-weight:800;font-size:.95rem;margin-bottom:3px;">Francesco Cimino</div>
+        <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px;">Tech Writer & Full-Stack Dev</div>
+        <a href="https://sellpilot.it" target="_blank" style="font-size:.78rem;color:var(--indigo);font-weight:700;">SellPilot.it →</a>
+      </div>
+
+      <!-- Related posts -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;">
+        <h4 style="font-size:.88rem;font-weight:800;color:var(--text-dark);margin-bottom:16px;">Leggi anche</h4>
+        <div id="relPosts"></div>
+      </div>
+
+      <!-- SellPilot CTA -->
+      <div style="background:linear-gradient(135deg,#1e2066,#3d3fa3);border-radius:var(--radius-md);padding:22px;color:#fff;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:10px;">🚀</div>
+        <h4 style="font-size:.92rem;font-weight:800;margin-bottom:6px;">SellPilot.it</h4>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin-bottom:14px;line-height:1.6;">Automatizza le vendite online con AI avanzata</p>
+        <a href="https://sellpilot.it" target="_blank"
+           style="display:inline-block;background:#fbbf24;color:#111;padding:8px 20px;border-radius:var(--radius-sm);font-size:.8rem;font-weight:700;">
+          Scopri di più →
+        </a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer class="l-footer">
+  <div class="l-footer-top">
+    <a href="index.html" class="l-footer-logo">Ap<span>Store</span></a>
+    <nav class="l-footer-nav">
+      <a href="catalogo.html">Products</a>
+      <a href="blog.html">Blog</a>
+      <a href="login.html">Account</a>
+      <a href="registrati.html">Registrati</a>
+      <a href="https://sellpilot.it" target="_blank">SellPilot ↗</a>
+    </nav>
+  </div>
+  <div class="l-footer-bottom">
+    <span>© 2026 ApStore — Powered by <a href="https://sellpilot.it">SellPilot.it</a></span>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const imgCls = ['c1','c2','c3','c4'];
+  const id   = parseInt(new URLSearchParams(location.search).get('id')) || 1;
+  const post = BLOG_POSTS.find(p => p.id === id) || BLOG_POSTS[0];
+
+  document.title = post.title + ' — ApStore Blog';
+
+  // Hero bg colour per category
+  const heroBg = { 'Componenti PC':'linear-gradient(135deg,#eef0ff,#c7d2fe)', 'Gaming':'linear-gradient(135deg,#fdf2f8,#fbcfe8)', 'Fotografia':'linear-gradient(135deg,#ecfdf5,#a7f3d0)', 'Elettrodomestici':'linear-gradient(135deg,#fffbeb,#fde68a)', 'Monitor':'linear-gradient(135deg,#f0f9ff,#bae6fd)', 'Smartphone':'linear-gradient(135deg,#f0fdf4,#bbf7d0)', 'Networking':'linear-gradient(135deg,#fff7ed,#fed7aa)', 'Business':'linear-gradient(135deg,#eef0ff,#c7d2fe)' };
+  const hero = document.getElementById('artHero');
+  hero.style.background = heroBg[post.category] || 'var(--indigo-soft)';
+  hero.textContent = post.icon;
+
+  document.getElementById('artCatBC').textContent = post.category;
+  document.getElementById('artTag').textContent   = post.category;
+  document.getElementById('artDate').textContent  = '📅 ' + post.date;
+  document.getElementById('artRead').textContent  = '⏱ ' + post.readTime + ' di lettura';
+  document.getElementById('artTitle').textContent = post.title;
+
+  document.getElementById('artTags').innerHTML = [post.category, 'Tecnologia', 'ApStore', 'Guide 2026']
+    .map(t => `<span style="background:var(--bg);border:1px solid var(--border);color:var(--text-muted);padding:3px 10px;border-radius:12px;font-size:.75rem;">${t}</span>`).join(' ');
+
+  // Apply article-specific styles to body content
+  const bodyStyles = `
+    <style>
+      #artBody h2 { font-size:1.15rem;font-weight:800;color:var(--text-dark);margin:28px 0 10px; }
+      #artBody h3 { font-size:1rem;font-weight:700;color:var(--text-dark);margin:20px 0 8px; }
+      #artBody p  { margin-bottom:16px; }
+      #artBody ul,#artBody ol { padding-left:22px;margin-bottom:16px; }
+      #artBody li { margin-bottom:6px;line-height:1.75; }
+      #artBody strong { color:var(--text-dark); }
+      #artBody a  { color:var(--indigo); }
+    </style>`;
+
+  if (post.body) {
+    document.getElementById('artBody').innerHTML = bodyStyles + `<p style="font-size:1rem;font-weight:600;color:var(--text-body);margin-bottom:24px;line-height:1.75;">${post.excerpt}</p>` + post.body;
+  } else {
+    document.getElementById('artBody').innerHTML = bodyStyles + `
+      <p><strong>${post.excerpt}</strong></p><br>
+      <h2>Introduzione</h2>
+      <p>Il mondo della tecnologia evolve a ritmi rapidi. Rimanere aggiornati è fondamentale per fare scelte consapevoli, sia per i professionisti che per gli appassionati. In questa guida esploreremo tutti gli aspetti più importanti, con dati aggiornati al 2026.</p>
+      <div style="background:var(--indigo-soft);border-left:3px solid var(--indigo);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:16px 20px;margin:20px 0;">
+        <strong>💡 Consiglio Pro:</strong> Prima di acquistare, controlla sempre le specifiche tecniche e confronta più prodotti. Su ApStore ogni scheda prodotto include recensioni verificate e specifiche complete.
+      </div>
+      <h2>Conclusioni</h2>
+      <p>Su ApStore trovi tutto quello che ti serve: recensioni verificate, schede tecniche complete e prezzi competitivi. Iscriviti alla newsletter per restare aggiornato sulle ultime novità e offerte esclusive.</p>`;
+  }
+
+  // Related posts
+  BLOG_POSTS.filter(p => p.id !== post.id).slice(0, 3).forEach(p => {
+    document.getElementById('relPosts').innerHTML += `
+      <a href="articolo.html?id=${p.id}" style="display:flex;gap:10px;margin-bottom:14px;text-decoration:none;color:inherit;padding-bottom:14px;border-bottom:1px solid var(--border);">
+        <div style="width:44px;height:44px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">${p.icon}</div>
+        <div>
+          <div style="font-size:.82rem;font-weight:700;line-height:1.35;margin-bottom:3px;color:var(--text-dark);">${p.title.slice(0,52)}…</div>
+          <div style="font-size:.72rem;color:var(--text-muted);">${p.readTime}</div>
+        </div>
+      </a>`;
+  });
+  // fix last border
+  const lastRP = document.getElementById('relPosts').lastElementChild;
+  if (lastRP) lastRP.style.borderBottom = 'none';
+
+  // Related products
+  const catMap = { 'Componenti PC':'componenti-pc', 'Gaming':'gaming', 'Fotografia':'fotografia-video', 'Elettrodomestici':'elettrodomestici', 'Monitor':'monitor', 'Smartphone':'smartphone', 'Networking':'networking', 'Business':'componenti-pc' };
+  PRODUCTS.filter(p => p.category === (catMap[post.category] || 'componenti-pc')).slice(0, 2)
+    .forEach(p => { document.getElementById('artProds').innerHTML += renderProductCard(p); });
+
+  function share(net)  { showToast('Link condiviso su ' + net + '!', 'success'); }
+  function copyLink()  { navigator.clipboard?.writeText(location.href); showToast('Link copiato negli appunti!', 'success'); }
+</script>
+<script>
+window.addEventListener('scroll',()=>{ document.getElementById('lNav').classList.toggle('scrolled',scrollY>50); },{passive:true});
+function toggleMenu(){ const m=document.getElementById('lMenu'); m.classList.toggle('open'); document.body.style.overflow=m.classList.contains('open')?'hidden':''; }
+</script>
+</body>
+</html>

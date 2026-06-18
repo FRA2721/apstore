@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — ApStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container">
+    <span>🔒 Checkout sicuro — connessione crittografata SSL</span>
+    <div class="topbar-right">
+      <a href="https://sellpilot.it" target="_blank" class="topbar-sp">↗ SellPilot.it</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-wrap" style="justify-content:space-between;">
+      <a href="index.html" class="logo">Ap<span>Store</span><span class="logo-tag">by SellPilot</span></a>
+      <a href="carrello.html" style="font-size:.85rem;color:var(--indigo);font-weight:600;">← Torna al carrello</a>
+    </div>
+  </div>
+</header>
+
+<!-- Steps -->
+<div style="background:var(--white);border-bottom:1px solid var(--border);padding:14px 0;margin-bottom:0;">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;max-width:460px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--success);font-weight:700;">
+        <div style="width:26px;height:26px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;">✓</div> Carrello
+      </div>
+      <div style="flex:1;height:1px;background:var(--indigo);margin:0 12px;"></div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:700;color:var(--indigo);">
+        <div style="width:26px;height:26px;border-radius:50%;background:var(--indigo);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;">2</div> Spedizione
+      </div>
+      <div style="flex:1;height:1px;background:var(--border);margin:0 12px;"></div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-muted);">
+        <div style="width:26px;height:26px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;">3</div> Pagamento
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding:32px 24px 64px;">
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start;">
+
+    <!-- Left: forms -->
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+      <!-- Personal data -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:26px;">
+        <h3 style="font-size:.95rem;font-weight:800;color:var(--text-dark);margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Dati Personali
+        </h3>
+        <div class="form-grid">
+          <div class="form-field"><label>Nome *</label><input type="text" id="fNome" placeholder="Mario" required></div>
+          <div class="form-field"><label>Cognome *</label><input type="text" id="fCognome" placeholder="Rossi" required></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Email *</label><input type="email" id="fEmail" placeholder="mario@email.it" required></div>
+          <div class="form-field"><label>Telefono *</label><input type="tel" id="fTel" placeholder="+39 000 0000000" required></div>
+        </div>
+      </div>
+
+      <!-- Shipping address -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:26px;">
+        <h3 style="font-size:.95rem;font-weight:800;color:var(--text-dark);margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Indirizzo di Spedizione
+        </h3>
+        <div class="form-field"><label>Indirizzo *</label><input type="text" placeholder="Via Roma, 1" required></div>
+        <div class="form-grid">
+          <div class="form-field"><label>Città *</label><input type="text" placeholder="Milano" required></div>
+          <div class="form-field"><label>CAP *</label><input type="text" placeholder="20100" maxlength="5" required></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field"><label>Provincia</label><input type="text" placeholder="MI" maxlength="2"></div>
+          <div class="form-field"><label>Paese</label>
+            <select style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.9rem;outline:none;background:var(--white);">
+              <option>🇮🇹 Italia</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field"><label>Note consegna <span style="color:var(--text-muted);font-weight:400;">(opzionale)</span></label><input type="text" placeholder="Es. citofono, piano, orari preferiti…"></div>
+      </div>
+
+      <!-- Shipping method -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:26px;">
+        <h3 style="font-size:.95rem;font-weight:800;color:var(--text-dark);margin-bottom:18px;display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Metodo di Spedizione
+        </h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--indigo);border-radius:var(--radius-sm);cursor:pointer;background:var(--indigo-soft);">
+            <input type="radio" name="ship" value="express" checked style="accent-color:var(--indigo);">
+            <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Spedizione Express 24h</div><div style="font-size:.78rem;color:var(--text-muted);">Ordini entro le 14:00 — consegna domani</div></div>
+            <span style="font-weight:700;color:var(--success);font-size:.88rem;">Gratuita</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
+            <input type="radio" name="ship" value="standard" style="accent-color:var(--indigo);">
+            <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Spedizione Standard 2–3 gg</div><div style="font-size:.78rem;color:var(--text-muted);">Tracking incluso</div></div>
+            <span style="font-weight:700;font-size:.88rem;">€4,99</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
+            <input type="radio" name="ship" value="pickup" style="accent-color:var(--indigo);">
+            <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Ritiro in Punto di Consegna</div><div style="font-size:.78rem;color:var(--text-muted);">Scegli il punto più vicino</div></div>
+            <span style="font-weight:700;font-size:.88rem;">€2,99</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:26px;">
+        <h3 style="font-size:.95rem;font-weight:800;color:var(--text-dark);margin-bottom:18px;display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Metodo di Pagamento
+        </h3>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+          <label style="display:flex;align-items:center;gap:14px;padding:12px 16px;border:1.5px solid var(--indigo);border-radius:var(--radius-sm);cursor:pointer;background:var(--indigo-soft);">
+            <input type="radio" name="pay" value="card" checked style="accent-color:var(--indigo);" onchange="showPay('card')">
+            <span style="font-weight:700;font-size:.88rem;">💳 Carta di Credito / Debito</span>
+            <div style="margin-left:auto;display:flex;gap:5px;"><span class="pay-badge" style="background:var(--white);">VISA</span><span class="pay-badge" style="background:var(--white);">MC</span></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:14px;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
+            <input type="radio" name="pay" value="paypal" style="accent-color:var(--indigo);" onchange="showPay('paypal')">
+            <span style="font-weight:700;font-size:.88rem;">🔵 PayPal</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:14px;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
+            <input type="radio" name="pay" value="apple" style="accent-color:var(--indigo);" onchange="showPay('apple')">
+            <span style="font-weight:700;font-size:.88rem;">🍎 Apple Pay</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:14px;padding:12px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
+            <input type="radio" name="pay" value="rate" style="accent-color:var(--indigo);" onchange="showPay('rate')">
+            <span style="font-weight:700;font-size:.88rem;">📅 Pagamento a Rate (0% interessi)</span>
+          </label>
+        </div>
+
+        <div id="payCard">
+          <div class="form-field"><label>Numero Carta</label><input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)"></div>
+          <div class="form-grid">
+            <div class="form-field"><label>Scadenza</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+            <div class="form-field"><label>CVV</label><input type="text" placeholder="123" maxlength="3"></div>
+          </div>
+          <div class="form-field"><label>Titolare</label><input type="text" placeholder="MARIO ROSSI"></div>
+        </div>
+        <div id="payPaypal" style="display:none;padding:16px;background:var(--bg);border-radius:var(--radius-sm);font-size:.85rem;color:var(--text-muted);text-align:center;">Verrai reindirizzato su PayPal per completare il pagamento in modo sicuro.</div>
+        <div id="payApple"  style="display:none;padding:16px;background:var(--bg);border-radius:var(--radius-sm);font-size:.85rem;color:var(--text-muted);text-align:center;">Usa Touch ID o Face ID per autorizzare il pagamento con Apple Pay.</div>
+        <div id="payRate"   style="display:none;padding:16px;background:var(--bg);border-radius:var(--radius-sm);">
+          <p style="font-size:.85rem;font-weight:600;margin-bottom:12px;">Scegli il numero di rate (0% interessi):</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            ${['3','6','12','24'].map(n=>`<label style="padding:7px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:.82rem;font-weight:700;">${n} rate</label>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: order box -->
+    <div class="order-box" style="position:sticky;top:80px;">
+      <h3>Riepilogo Ordine</h3>
+      <div id="ckItems" style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);"></div>
+      <div class="order-row"><span>Subtotale</span><span id="ckSub">€0,00</span></div>
+      <div class="order-row"><span>Spedizione</span><span style="color:var(--success);font-weight:600;">Gratuita</span></div>
+      <div class="order-row order-total"><span>Totale</span><span id="ckTotal" style="color:var(--price);">€0,00</span></div>
+      <button class="btn-checkout" style="margin-top:18px;" onclick="placeOrder()">🔒 Conferma Ordine</button>
+      <p style="text-align:center;font-size:.72rem;color:var(--text-muted);margin-top:10px;">
+        Cliccando "Conferma Ordine" accetti i <a href="#" style="color:var(--indigo);">Termini di Servizio</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // Populate order summary
+  let sub = 0;
+  Cart.items.forEach(item => {
+    const p = PRODUCTS.find(pr => pr.id === item.id);
+    if (!p) return;
+    sub += p.price * item.qty;
+    document.getElementById('ckItems').innerHTML += `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:1.6rem;">${p.icon}</span>
+        <div style="flex:1;font-size:.83rem;"><div style="font-weight:600;">${p.name.slice(0,36)}…</div><div style="color:var(--text-muted);">×${item.qty}</div></div>
+        <strong style="font-size:.88rem;">${formatPrice(p.price * item.qty)}</strong>
+      </div>`;
+  });
+  document.getElementById('ckSub').textContent   = formatPrice(sub);
+  document.getElementById('ckTotal').textContent = formatPrice(sub);
+
+  function showPay(m) {
+    ['payCard','payPaypal','payApple','payRate'].forEach(id => document.getElementById(id).style.display = 'none');
+    const map = { card:'payCard', paypal:'payPaypal', apple:'payApple', rate:'payRate' };
+    document.getElementById(map[m]).style.display = 'block';
+  }
+
+  function fmtCard(el) {
+    let v = el.value.replace(/\D/g,'').slice(0,16);
+    el.value = v.match(/.{1,4}/g)?.join(' ') || v;
+  }
+
+  function placeOrder() {
+    const nome  = document.getElementById('fNome').value;
+    const email = document.getElementById('fEmail').value;
+    if (!nome || !email) { showToast('Compila tutti i campi obbligatori', 'error'); return; }
+    Cart.items = []; Cart.save();
+    window.location.href = 'ordine-confermato.html';
+  }
+</script>
+</body>
+</html>

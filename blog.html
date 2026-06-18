@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — ApStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══════════════ INTRO SPLASH ══════════════ -->
+<div id="introSplash" style="position:fixed;inset:0;z-index:9999;background:#0a0a14;display:flex;align-items:center;justify-content:center;pointer-events:all;">
+  <div id="introWord" style="font-family:'Google Sans','Helvetica Neue',Arial,sans-serif;font-size:clamp(4rem,18vw,16rem);font-weight:200;letter-spacing:-.04em;line-height:.9;color:#fff;opacity:0;">Blog</div>
+</div>
+<style>
+@keyframes introFadeIn  { from{opacity:0;transform:translateX(0)} to{opacity:1;transform:translateX(0)} }
+@keyframes introFadeOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(-18vw)} }
+</style>
+<script>
+(function(){
+  const splash=document.getElementById('introSplash'),word=document.getElementById('introWord');
+  word.style.animation='introFadeIn .7s cubic-bezier(.16,1,.3,1) .15s forwards';
+  setTimeout(()=>{
+    word.style.animation='introFadeOut .6s cubic-bezier(.7,0,.84,0) forwards';
+    setTimeout(()=>{
+      splash.style.transition='opacity .65s cubic-bezier(.16,1,.3,1)';
+      splash.style.opacity='0';
+      setTimeout(()=>{ splash.style.display='none'; },680);
+    },1050);
+  },2000);
+})();
+</script>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav class="l-nav" id="lNav">
+  <a href="index.html" class="l-logo">Ap<span>Store</span></a>
+  <div class="l-nav-right">
+    <a href="carrello.html" class="l-cart-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="l-cart-count" id="cartBadge" style="display:none">0</span>
+    </a>
+    <a href="catalogo.html" class="l-btn-dark">Shop →</a>
+    <button class="l-btn-light" onclick="toggleMenu()">Menu ••</button>
+  </div>
+</nav>
+
+<!-- ══════════════ MENU OVERLAY ══════════════ -->
+<div class="l-menu" id="lMenu">
+  <div class="l-menu-header">
+    <a href="index.html" class="l-menu-logo" onclick="toggleMenu()">Ap<span>Store</span></a>
+    <button class="l-menu-close" onclick="toggleMenu()">✕ Chiudi</button>
+  </div>
+  <div class="l-menu-links">
+    <a href="index.html" class="l-menu-link" onclick="toggleMenu()">Home <span>01</span></a>
+    <a href="catalogo.html" class="l-menu-link" onclick="toggleMenu()">Products <span>02</span></a>
+    <a href="blog.html" class="l-menu-link" onclick="toggleMenu()">Blog <span>03</span></a>
+    <a href="login.html" class="l-menu-link" onclick="toggleMenu()">Account <span>04</span></a>
+    <a href="carrello.html" class="l-menu-link" onclick="toggleMenu()">Carrello <span>05</span></a>
+  </div>
+  <div class="l-menu-footer">
+    <a href="https://sellpilot.it" target="_blank">↗ SellPilot.it</a>
+    <span style="color:rgba(255,255,255,.15)">·</span>
+    <a href="registrati.html" onclick="toggleMenu()">Registrati</a>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE HERO ══════════════ -->
+<div class="l-page-hero">
+  <span class="l-page-hero-label">● Blog</span>
+  <h1>Blog ApStore</h1>
+  <p class="l-page-hero-sub">Guide, recensioni e novità dal mondo tech</p>
+  <div class="l-breadcrumb">
+    <a href="index.html">Home</a><span>›</span><span>Blog</span>
+  </div>
+</div>
+
+<div class="container" style="padding:40px 24px 64px;">
+
+  <!-- Category filters -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;">
+    <button class="blog-filter active" onclick="filterBlog('',this)">Tutti</button>
+    <button class="blog-filter" onclick="filterBlog('Componenti PC',this)">Componenti PC</button>
+    <button class="blog-filter" onclick="filterBlog('Gaming',this)">Gaming</button>
+    <button class="blog-filter" onclick="filterBlog('Fotografia',this)">Fotografia</button>
+    <button class="blog-filter" onclick="filterBlog('Elettrodomestici',this)">Elettrodomestici</button>
+    <button class="blog-filter" onclick="filterBlog('Monitor',this)">Monitor</button>
+    <button class="blog-filter" onclick="filterBlog('Smartphone',this)">Smartphone</button>
+    <button class="blog-filter" onclick="filterBlog('Networking',this)">Networking</button>
+    <button class="blog-filter" onclick="filterBlog('Business',this)">Business</button>
+  </div>
+
+  <style>
+    .blog-filter {
+      padding: 7px 18px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: var(--white); font-size: .82rem; font-weight: 600;
+      color: var(--text-body); cursor: pointer; transition: all .18s;
+    }
+    .blog-filter:hover, .blog-filter.active {
+      background: var(--indigo); color: #fff; border-color: var(--indigo);
+    }
+  </style>
+
+  <!-- Featured post -->
+  <div id="featPost" style="margin-bottom:48px;"></div>
+
+  <!-- Grid -->
+  <div class="section-header" style="margin-bottom:24px;">
+    <h2 class="section-title" id="gridLabel">Ultimi articoli</h2>
+  </div>
+  <div class="blog-grid" id="blogGrid"></div>
+
+  <!-- Newsletter -->
+  <div style="background:linear-gradient(120deg,#2b2d88,#3d3fa3);border-radius:var(--radius-lg);padding:48px 56px;text-align:center;color:#fff;margin-top:64px;">
+    <p style="font-size:.75rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px;">Newsletter</p>
+    <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:10px;">Resta sempre aggiornato</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:.88rem;max-width:400px;margin:0 auto 28px;">Offerte esclusive, nuovi arrivi e guide tech nella tua inbox.</p>
+    <form onsubmit="nlSub(event)" style="display:flex;max-width:380px;margin:0 auto;gap:0;">
+      <input type="email" placeholder="La tua email" required
+        style="flex:1;padding:11px 18px;border:none;border-radius:var(--radius-sm) 0 0 var(--radius-sm);font-size:.88rem;outline:none;">
+      <button type="submit" class="btn-primary" style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:11px 20px;">
+        Iscriviti
+      </button>
+    </form>
+  </div>
+</div>
+
+<footer class="l-footer">
+  <div class="l-footer-top">
+    <a href="index.html" class="l-footer-logo">Ap<span>Store</span></a>
+    <nav class="l-footer-nav">
+      <a href="catalogo.html">Products</a>
+      <a href="blog.html">Blog</a>
+      <a href="login.html">Account</a>
+      <a href="registrati.html">Registrati</a>
+      <a href="https://sellpilot.it" target="_blank">SellPilot ↗</a>
+    </nav>
+  </div>
+  <div class="l-footer-bottom">
+    <span>© 2026 ApStore — Powered by <a href="https://sellpilot.it">SellPilot.it</a></span>
+    <div class="footer-payments">
+      <span class="pay-badge">VISA</span><span class="pay-badge">MC</span><span class="pay-badge">PayPal</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const imgCls = ['c1','c2','c3','c4','c1','c2'];
+  let currentFilter = '';
+
+  function filterBlog(cat, btn) {
+    currentFilter = cat;
+    document.querySelectorAll('.blog-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBlog();
+  }
+
+  function renderBlog() {
+    const posts = currentFilter
+      ? BLOG_POSTS.filter(p => p.category === currentFilter)
+      : BLOG_POSTS;
+
+    // Featured
+    const feat = posts[0];
+    const fp = document.getElementById('featPost');
+    if (feat) {
+      fp.innerHTML = `
+        <a href="articolo.html?id=${feat.id}"
+           style="display:grid;grid-template-columns:1fr 1fr;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:box-shadow .18s;text-decoration:none;color:inherit;"
+           onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow=''">
+          <div style="background:linear-gradient(135deg,var(--indigo-soft),#c7d2fe);display:flex;align-items:center;justify-content:center;font-size:7rem;min-height:260px;">${feat.icon}</div>
+          <div style="padding:36px;">
+            <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--indigo);margin-bottom:10px;">⭐ In evidenza · ${feat.category}</div>
+            <h2 style="font-size:1.25rem;font-weight:800;color:var(--text-dark);margin-bottom:12px;line-height:1.35;">${feat.title}</h2>
+            <p style="font-size:.85rem;color:var(--text-muted);line-height:1.7;margin-bottom:18px;">${feat.excerpt}</p>
+            <div style="display:flex;gap:14px;font-size:.78rem;color:var(--text-light);">
+              <span>📅 ${feat.date}</span><span>⏱ ${feat.readTime}</span>
+            </div>
+          </div>
+        </a>`;
+    } else { fp.innerHTML = ''; }
+
+    // Grid
+    document.getElementById('gridLabel').textContent = currentFilter ? `Articoli: ${currentFilter}` : 'Ultimi articoli';
+    const rest = posts.slice(1);
+    const g = document.getElementById('blogGrid');
+    g.innerHTML = rest.length
+      ? rest.map((post, i) => `
+          <div class="blog-card">
+            <a href="articolo.html?id=${post.id}" style="text-decoration:none;color:inherit;display:block;">
+              <div class="blog-card-img ${imgCls[i % imgCls.length]}">${post.icon}</div>
+              <div class="blog-card-body">
+                <div class="blog-tag">${post.category}</div>
+                <div class="blog-title">${post.title}</div>
+                <div class="blog-meta"><span>${post.date}</span><span>·</span><span>${post.readTime}</span></div>
+              </div>
+            </a>
+            <div style="padding:0 20px 20px;">
+              <a href="articolo.html?id=${post.id}" class="btn-read-more">Leggi articolo</a>
+            </div>
+          </div>`).join('')
+      : `<p style="color:var(--text-muted);grid-column:1/-1;padding:40px 0;">Nessun articolo in questa categoria.</p>`;
+  }
+
+  function nlSub(e) { e.preventDefault(); showToast('Iscrizione confermata! 🎉', 'success'); e.target.reset(); }
+
+  renderBlog();
+</script>
+<script>
+window.addEventListener('scroll',()=>{ document.getElementById('lNav').classList.toggle('scrolled',scrollY>50); },{passive:true});
+function toggleMenu(){ const m=document.getElementById('lMenu'); m.classList.toggle('open'); document.body.style.overflow=m.classList.contains('open')?'hidden':''; }
+</script>
+</body>
+</html>
