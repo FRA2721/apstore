@@ -177,26 +177,29 @@
   const PAGE_SIZE = 9;
   let page = 1;
 
-  // Sidebar categories
+  // Sidebar categories + titolo pagina — ricostruibili (le categorie arrivano
+  // dall'API SellPilot in modo asincrono, vedi window.__apstoreRenderCategories).
   const sc = document.getElementById('sideCats');
-  CATEGORIES.forEach(c => {
-    sc.innerHTML += `<li><a href="catalogo.html?cat=${c.id}" ${currentCat===c.id?'style="color:var(--indigo);font-weight:700;"':''}>${c.icon} ${c.name}<span>${c.count}</span></a></li>`;
-  });
-
-  // Page title
-  if (currentCat) {
-    const cat = CATEGORIES.find(c => c.id === currentCat);
-    if (cat) {
-      document.getElementById('pageTitle').textContent = cat.name;
-      document.getElementById('breadCur').textContent  = cat.name;
+  function renderCategories() {
+    sc.innerHTML = '';
+    CATEGORIES.forEach(c => {
+      sc.innerHTML += `<li><a href="catalogo.html?cat=${c.id}" ${currentCat===c.id?'style="color:var(--indigo);font-weight:700;"':''}>${c.icon} ${c.name}<span>${c.count}</span></a></li>`;
+    });
+    if (currentCat) {
+      const cat = CATEGORIES.find(c => c.id === currentCat);
+      if (cat) {
+        document.getElementById('pageTitle').textContent = cat.name;
+        document.getElementById('breadCur').textContent  = cat.name;
+      }
+    } else if (currentQ) {
+      document.getElementById('pageTitle').textContent = `Risultati: "${currentQ}"`;
+      document.getElementById('breadCur').textContent  = 'Ricerca';
+    } else if (currentBadge === 'PROMO') {
+      document.getElementById('pageTitle').textContent = 'Offerte del Giorno';
+      document.getElementById('breadCur').textContent  = 'Offerte';
     }
-  } else if (currentQ) {
-    document.getElementById('pageTitle').textContent = `Risultati: "${currentQ}"`;
-    document.getElementById('breadCur').textContent  = 'Ricerca';
-  } else if (currentBadge === 'PROMO') {
-    document.getElementById('pageTitle').textContent = 'Offerte del Giorno';
-    document.getElementById('breadCur').textContent  = 'Offerte';
   }
+  renderCategories();
 
   function getFiltered() {
     let list = [...PRODUCTS];
@@ -250,8 +253,9 @@
   }
   function goPage(n) { page=n; render(); window.scrollTo({top:0,behavior:'smooth'}); }
   render();
-  // Callback richiamato da data.js quando arrivano prodotti dall'API SellPilot
+  // Callback richiamati da data.js quando arrivano prodotti/categorie dall'API SellPilot
   window.__apstoreRender = function() { render(); };
+  window.__apstoreRenderCategories = function() { renderCategories(); };
 </script>
 <script>
 window.addEventListener('scroll',()=>{ document.getElementById('lNav').classList.toggle('scrolled',scrollY>50); },{passive:true});

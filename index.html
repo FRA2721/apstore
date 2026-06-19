@@ -1172,8 +1172,16 @@ function addCards(grid, products){
 function renderProductGrids() {
   const hc = document.getElementById('heroCount');
   if (hc) hc.textContent = PRODUCTS.length;
-  addCards(document.getElementById('featGrid'), PRODUCTS.filter(p=>p.badge==='PROMO').slice(0,4));
-  addCards(document.getElementById('newGrid'),  PRODUCTS.filter(p=>p.badge==='NEW').slice(0,4));
+  // Pulisco le griglie: renderProductGrids può essere richiamata più volte (load + merge API) e addCards appende
+  const featGrid = document.getElementById('featGrid');
+  const newGrid  = document.getElementById('newGrid');
+  if (featGrid) featGrid.innerHTML = '';
+  if (newGrid)  newGrid.innerHTML  = '';
+  // Fallback: senza prodotti badge (catalogo reale dal gestionale) mostra comunque i prodotti veri
+  const promo = PRODUCTS.filter(p=>p.badge==='PROMO');
+  const nuovi = PRODUCTS.filter(p=>p.badge==='NEW');
+  addCards(featGrid, (promo.length ? promo : PRODUCTS).slice(0,4));
+  addCards(newGrid,  (nuovi.length ? nuovi : PRODUCTS.slice(4)).slice(0,4));
 }
 renderProductGrids();
 // Callback richiamato da data.js quando arrivano prodotti dall'API SellPilot
@@ -1202,17 +1210,25 @@ window.__apstoreRender = renderProductGrids;
     return card;
   }
 
-  /* Build cards × 3 for seamless loop */
-  const allCats = [...CATEGORIES, ...CATEGORIES, ...CATEGORIES];
-  allCats.forEach(cat => track.appendChild(makeCard(cat)));
-
   const wrap = document.getElementById('catCarouselWrap');
   const viewport = track.parentElement;
 
   /* ── Auto-scroll engine ── */
   const CARD_W = 300 + 24; /* card + gap */
-  const SET_W  = CATEGORIES.length * CARD_W;
-  let pos = SET_W;          /* start at second set so we can loop both ways */
+  let SET_W = 0;
+  let pos = 0;
+
+  /* (Ri)costruisce le card dalle CATEGORIES correnti (× 3 per loop senza salti).
+     Le categorie arrivano async dall'API SellPilot, quindi va richiamabile. */
+  function buildTrack() {
+    track.innerHTML = '';
+    [...CATEGORIES, ...CATEGORIES, ...CATEGORIES].forEach(cat => track.appendChild(makeCard(cat)));
+    SET_W = CATEGORIES.length * CARD_W;
+    pos   = SET_W;          /* start at second set so we can loop both ways */
+    track.style.transform = `translateX(${-pos}px)`;
+  }
+  buildTrack();
+  window.__apstoreRenderCategories = buildTrack;
   let speed = 0.6;
   let paused = false;
   let raf;

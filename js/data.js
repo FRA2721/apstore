@@ -2,50 +2,59 @@
 // ApStore — Dati Prodotti, Categorie, Blog
 // ================================================
 
-const CATEGORIES = [
-  { id: 'componenti-pc',   name: 'Componenti PC',    icon: '🖥️', count: 248, img: 'https://images.unsplash.com/photo-1591799268116-b9da23dfd4f5?w=400&h=260&fit=crop&q=80', sub: ['Alimentatori','Cabinet','Processori','Schede Madri','RAM','GPU','Audio/Video','Raffreddamento'] },
-  { id: 'elettrodomestici',name: 'Elettrodomestici', icon: '🏠', count: 312, img: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=260&fit=crop&q=80', sub: ['Lavatrici','Lavastoviglie','Frigoriferi','Forni','Aspirapolvere','Macchine Caffè','Microonde'] },
-  { id: 'fotografia-video',name: 'Fotografia',       icon: '📷', count: 156, img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=260&fit=crop&q=80', sub: ['Fotocamere','Obiettivi','Treppiedi','Luci Studio','Droni','Videocamere','Accessori'] },
-  { id: 'gaming',          name: 'Gaming',           icon: '🎮', count: 189, img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=260&fit=crop&q=80', sub: ['Console','Controller','Giochi','Headset Gaming','Monitor Gaming','Sedie Gaming','Mouse'] },
-  { id: 'arredo',          name: 'Arredo Ufficio',   icon: '🪑', count: 94,  img: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=260&fit=crop&q=80', sub: ['Scrivanie','Sedie Ergonomiche','Librerie','Cassettiere','Illuminazione','Smart Working'] },
-  { id: 'networking',      name: 'Networking',       icon: '📡', count: 127, img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=260&fit=crop&q=80', sub: ['Router','Switch','Modem','Access Point','Cavi','NAS','Firewall'] },
-  { id: 'smartphone',      name: 'Smartphone',       icon: '📱', count: 203, img: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=400&h=260&fit=crop&q=80', sub: ['Android','iPhone','Cover','Caricatori','Auricolari','Smartwatch'] },
-  { id: 'monitor',         name: 'Monitor',          icon: '🖥',  count: 88,  img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=260&fit=crop&q=80', sub: ['Full HD','4K','Gaming','Curvi','Ultrawide','Touchscreen'] },
-];
+// CATEGORIES è DINAMICO: costruito a runtime dai prodotti reali del gestionale
+// SellPilot (campo `famiglia` = categoria, `gruppo` = sotto-categoria). Niente più
+// categorie/conteggi hardcoded. Popolato da _rebuildCategories() dopo il merge API.
+const CATEGORIES = [];
 
-const PRODUCTS = [
-  // Componenti PC
-  { id: 1,  name: 'AMD Ryzen 9 7950X Processore 16-Core 5.7GHz', brand: 'AMD',        category: 'componenti-pc',   sub: 'Processori',     price: 589.99, oldPrice: 749.99, rating: 4.8, reviews: 342, badge: 'PROMO', icon: '⚡', sku: 'AMD-R9-7950X',     stock: true,  desc: '16 core fino a 5.7 GHz boost. Ideale per gaming 4K, rendering e workload AI simultanei.',              img: 'https://images.unsplash.com/photo-1591799268116-b9da23dfd4f5?w=400&h=300&fit=crop&q=80', specs: { Socket: 'AM5', Core: '16 Core / 32 Thread', Boost: '5.7 GHz', TDP: '170W' } },
-  { id: 2,  name: 'ASUS ROG RTX 4080 Super 16GB GDDR6X',          brand: 'ASUS',       category: 'componenti-pc',   sub: 'GPU',            price: 999.99, oldPrice: null,   rating: 4.9, reviews: 218, badge: 'NEW',   icon: '🎯', sku: 'ASUS-RTX4080S',    stock: true,  desc: '16GB GDDR6X con ray-tracing in tempo reale e DLSS 4 per gaming 4K senza compromessi.',                img: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400&h=300&fit=crop&q=80', specs: { VRAM: '16GB GDDR6X', TDP: '320W', Output: '3× DP 1.4, 1× HDMI 2.1' } },
-  { id: 3,  name: 'Corsair Vengeance DDR5 32GB 6000MHz Kit',       brand: 'Corsair',    category: 'componenti-pc',   sub: 'RAM',            price: 189.99, oldPrice: 219.99, rating: 4.7, reviews: 156, badge: null,    icon: '💾', sku: 'CRS-VNG-32G',      stock: true,  desc: 'Kit 2×16GB DDR5 a 6000 MHz CL36. Massima velocità per le build più esigenti del 2026.',               img: 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=400&h=300&fit=crop&q=80', specs: { Capacità: '32GB (2×16)', Velocità: '6000 MHz', Latenza: 'CL36' } },
-  { id: 4,  name: 'Samsung 990 Pro 2TB NVMe PCIe 4.0 SSD',        brand: 'Samsung',    category: 'componenti-pc',   sub: 'Storage',        price: 169.99, oldPrice: 199.99, rating: 4.9, reviews: 489, badge: 'PROMO', icon: '💿', sku: 'SAM-990PRO-2T',    stock: true,  desc: 'Velocità di lettura fino a 7450 MB/s su PCIe 4.0. Il miglior SSD NVMe per prestazioni e prezzo.',     img: 'https://images.unsplash.com/photo-1618328533580-87fb4ec6c613?w=400&h=300&fit=crop&q=80', specs: { Capacità: '2TB', Lettura: '7450 MB/s', Scrittura: '6900 MB/s' } },
-  { id: 5,  name: 'Corsair RM1000x 1000W 80+ Gold Modulare',       brand: 'Corsair',    category: 'componenti-pc',   sub: 'Alimentatori',   price: 159.99, oldPrice: null,   rating: 4.8, reviews: 287, badge: null,    icon: '🔋', sku: 'CRS-RM1000X',      stock: true,  desc: 'Alimentatore fully modulare 1000W certificato 80+ Gold. Silenzioso e affidabile per build avanzate.',  img: 'https://images.unsplash.com/photo-1591799268116-b9da23dfd4f5?w=400&h=300&fit=crop&q=80', specs: { Watt: '1000W', Certificazione: '80+ Gold', Modulare: 'Fully Modular' } },
-  { id: 6,  name: 'Noctua NH-D15 Dissipatore CPU Doppio Fan',      brand: 'Noctua',     category: 'componenti-pc',   sub: 'Raffreddamento', price: 89.99,  oldPrice: null,   rating: 4.9, reviews: 623, badge: null,    icon: '❄️', sku: 'NCT-NHD15',        stock: true,  desc: 'Doppia torre con ventole 140mm premium. Raffredda CPU fino a 250W in quasi silenzio assoluto.',        img: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=400&h=300&fit=crop&q=80', specs: { TDP: '250W', Fan: '2× 140mm', Rumore: '24.6 dB' } },
-  // Elettrodomestici
-  { id: 7,  name: 'Samsung WW11BB Lavatrice 11kg AI EcoWash',      brand: 'Samsung',    category: 'elettrodomestici',sub: 'Lavatrici',      price: 799.99, oldPrice: 999.99, rating: 4.6, reviews: 134, badge: 'PROMO', icon: '🫧', sku: 'SAM-WW11BB',       stock: true,  desc: 'AI EcoWash rileva il carico e sceglie il programma ottimale. Risparmio idrico fino al 30%.',           img: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400&h=300&fit=crop&q=80', specs: { Capacità: '11 kg', Velocità: '1400 rpm', Classe: 'A++' } },
-  { id: 8,  name: 'Bosch Serie 8 Lavastoviglie 13 Coperti',        brand: 'Bosch',      category: 'elettrodomestici',sub: 'Lavastoviglie',  price: 649.99, oldPrice: null,   rating: 4.7, reviews: 98,  badge: null,    icon: '🍽️', sku: 'BSH-SMV8ZCX',      stock: true,  desc: 'Ultra-silenziosa a soli 42 dB, classe A+++. 13 coperti con asciugatura a zeolite integrata.',         img: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&h=300&fit=crop&q=80', specs: { Coperti: '13', Classe: 'A+++', Rumore: '42 dB' } },
-  { id: 9,  name: 'De Longhi La Specialista Arte Macchina Caffè',  brand: 'De Longhi',  category: 'elettrodomestici',sub: 'Macchine Caffè', price: 449.99, oldPrice: 549.99, rating: 4.8, reviews: 267, badge: 'PROMO', icon: '☕', sku: 'DLG-SPEC-ARTE',    stock: true,  desc: 'Macinacaffè integrato, pompa 15 bar e controllo temperatura preciso. Espresso da barista a casa.',      img: 'https://images.unsplash.com/photo-1495474745390-23648d9e46ee?w=400&h=300&fit=crop&q=80', specs: { Pressione: '15 bar', Macinacaffè: 'Integrato', Display: 'LED' } },
-  { id: 10, name: 'Dyson V15 Detect Aspirapolvere Senza Fili',     brand: 'Dyson',      category: 'elettrodomestici',sub: 'Aspirapolvere',  price: 579.99, oldPrice: 649.99, rating: 4.7, reviews: 412, badge: null,    icon: '🌪️', sku: 'DYS-V15-DET',      stock: true,  desc: 'Laser verde rivela polveri invisibili. 240 AW di potenza, filtro HEPA e 60 min di autonomia.',          img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop&q=80', specs: { Potenza: '240 AW', Autonomia: '60 min', Filtro: 'HEPA' } },
-  // Fotografia
-  { id: 11, name: 'Sony Alpha A7 IV Mirrorless Full Frame 33MP',   brand: 'Sony',       category: 'fotografia-video',sub: 'Fotocamere',     price: 2299.99,oldPrice: 2599.99,rating: 4.9, reviews: 187, badge: 'PROMO', icon: '📸', sku: 'SNY-A7IV',         stock: true,  desc: 'Sensore BSI CMOS 33MP full frame, video 4K 60fps e AF Eye Detection con stabilizzazione 5 assi.',     img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop&q=80', specs: { Sensore: '33MP Full Frame', Video: '4K 60fps', Stabilizzazione: '5 assi' } },
-  { id: 12, name: 'DJI Mini 4 Pro Drone 4K HDR 249g',             brand: 'DJI',        category: 'fotografia-video',sub: 'Droni',          price: 759.99, oldPrice: null,   rating: 4.8, reviews: 294, badge: 'NEW',   icon: '🚁', sku: 'DJI-MINI4PRO',     stock: true,  desc: 'Sotto i 249g, obstacle avoidance omnidirezionale e video 4K 100fps HDR. Il drone perfetto.',           img: 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=400&h=300&fit=crop&q=80', specs: { Video: '4K 100fps', Autonomia: '34 min', Peso: '249g' } },
-  { id: 13, name: 'GoPro Hero 12 Black 5.3K Action Camera',        brand: 'GoPro',      category: 'fotografia-video',sub: 'Videocamere',    price: 349.99, oldPrice: 399.99, rating: 4.6, reviews: 523, badge: null,    icon: '🎬', sku: 'GPR-H12-BLK',      stock: true,  desc: 'Video 5.3K con HyperSmooth 6.0 e waterproof fino a 10m. Per avventure estreme ad alta definizione.',  img: 'https://images.unsplash.com/photo-1564466809058-bf4114d55352?w=400&h=300&fit=crop&q=80', specs: { Video: '5.3K 60fps', Waterproof: '10m', Stabilizzazione: 'HyperSmooth 6.0' } },
-  // Gaming
-  { id: 14, name: 'PlayStation 5 Digital Edition Console',         brand: 'Sony',       category: 'gaming',          sub: 'Console',        price: 449.99, oldPrice: null,   rating: 4.9, reviews: 1247,badge: null,    icon: '🎮', sku: 'SNY-PS5-DIG',      stock: false, desc: 'Next-gen con CPU AMD Zen 2, GPU 10.3 TFlops e SSD custom 825GB. Loading quasi istantaneo.',            img: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop&q=80', specs: { CPU: 'AMD Zen 2 8-core', GPU: '10.3 TFlops', SSD: '825GB Custom' } },
-  { id: 15, name: 'Razer DeathAdder V3 HyperSpeed Mouse Wireless', brand: 'Razer',      category: 'gaming',          sub: 'Mouse',          price: 89.99,  oldPrice: 109.99, rating: 4.7, reviews: 378, badge: 'PROMO', icon: '🐍', sku: 'RZR-DAV3-HS',      stock: true,  desc: 'Solo 63g con sensore Focus Pro 30.000 DPI e polling 8000 Hz. Wireless senza compromessi.',             img: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=300&fit=crop&q=80', specs: { DPI: '30.000', Polling: '8000 Hz', Peso: '63g' } },
-  { id: 16, name: 'ASUS ROG Swift OLED 27" 2K 360Hz Monitor',     brand: 'ASUS',       category: 'gaming',          sub: 'Monitor Gaming', price: 799.99, oldPrice: 999.99, rating: 4.8, reviews: 167, badge: 'PROMO', icon: '🖥️', sku: 'ASUS-ROG-OLED27',  stock: true,  desc: 'Pannello OLED 2K 360Hz con nero assoluto e tempi di risposta 0.03ms. Gaming competitivo al top.',      img: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop&q=80', specs: { Pannello: 'OLED', Refresh: '360Hz', Risoluzione: '2560×1440' } },
-  { id: 17, name: 'SteelSeries Arctis Nova Pro Wireless Headset',  brand: 'SteelSeries',category: 'gaming',          sub: 'Headset Gaming', price: 349.99, oldPrice: null,   rating: 4.7, reviews: 289, badge: null,    icon: '🎧', sku: 'STL-ANP-WL',       stock: true,  desc: 'Audio Hi-Fi 360° con microfono ClearCast Gen2 e sistema dual-battery da 22 ore di autonomia.',        img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&q=80', specs: { Driver: '40mm', Microfono: 'ClearCast Gen2', Autonomia: '22h' } },
-  // Arredo
-  { id: 18, name: 'Secretlab TITAN Evo XL Sedia Gaming Premium',   brand: 'Secretlab',  category: 'arredo',          sub: 'Sedie',          price: 449.99, oldPrice: 499.99, rating: 4.8, reviews: 892, badge: null,    icon: '🪑', sku: 'SL-TITAN-EVO',     stock: true,  desc: 'Supporto lombare 4D, braccioli multidirezionali e rivestimento SoftWeave traspirante. Sessioni infinite.', img: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&h=300&fit=crop&q=80', specs: { Materiale: 'SoftWeave Plus', Reclinazione: '85–165°', 'Peso Max': '130 kg' } },
-  { id: 19, name: 'Flexispot E7 Pro Scrivania Elettrica Dual Motor',brand: 'Flexispot',  category: 'arredo',          sub: 'Scrivanie',      price: 399.99, oldPrice: 469.99, rating: 4.7, reviews: 234, badge: 'PROMO', icon: '📋', sku: 'FLP-E7PRO',        stock: true,  desc: 'Altezza regolabile 58–123 cm con doppio motore silenzioso. Portata 125 kg per qualsiasi setup.',       img: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=300&fit=crop&q=80', specs: { Altezza: '58–123 cm', Portata: '125 kg', Motori: 'Dual Motor' } },
-  // Networking
-  { id: 20, name: 'ASUS ZenWiFi Pro ET12 Router Wi-Fi 6E Tri-Band',brand: 'ASUS',       category: 'networking',      sub: 'Router',         price: 449.99, oldPrice: 529.99, rating: 4.8, reviews: 156, badge: null,    icon: '📡', sku: 'ASUS-ZENWIFI-ET12',stock: true,  desc: 'Wi-Fi 6E Tri-Band con banda 6GHz dedicata. Fino a 11Gbps, copertura mesh per tutta la casa.',          img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=300&fit=crop&q=80', specs: { Standard: 'Wi-Fi 6E', Banda: 'Tri-Band', Velocità: '11000 Mbps' } },
-  // Smartphone
-  { id: 21, name: 'Samsung Galaxy S25 Ultra 12GB/512GB Titanio',   brand: 'Samsung',    category: 'smartphone',      sub: 'Android',        price: 1299.99,oldPrice: 1399.99,rating: 4.8, reviews: 567, badge: 'PROMO', icon: '📱', sku: 'SAM-S25U-512',     stock: true,  desc: 'Camera 200MP con AI, S Pen integrata e display AMOLED 6.9" da 2600 nit. Il flagship Android definitivo.', img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop&q=80', specs: { Display: '6.9" Dynamic AMOLED', Camera: '200MP + AI', Batteria: '5000 mAh' } },
-  { id: 22, name: 'iPhone 16 Pro 256GB Titanio Naturale',          brand: 'Apple',      category: 'smartphone',      sub: 'iPhone',         price: 1329.99,oldPrice: null,   rating: 4.9, reviews: 834, badge: null,    icon: '🍎', sku: 'APL-IP16PRO-256',  stock: true,  desc: 'Chip A18 Pro, sistema ProCamera 48MP e display Super Retina XDR 120Hz. Apple Intelligence integrata.',  img: 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=400&h=300&fit=crop&q=80', specs: { Chip: 'A18 Pro', Camera: '48MP ProCamera', Display: '6.3" Super Retina' } },
-  // Monitor
-  { id: 23, name: 'LG 27GP950-B 4K Nano IPS 144Hz 1ms Monitor',   brand: 'LG',         category: 'monitor',         sub: '4K',             price: 549.99, oldPrice: 699.99, rating: 4.7, reviews: 312, badge: 'PROMO', icon: '🖥',  sku: 'LG-27GP950B',      stock: true,  desc: 'Nano IPS 4K a 144Hz con copertura DCI-P3 98% e HDMI 2.1. Per gaming e produzione creativa al top.',    img: 'https://images.unsplash.com/photo-1586210579191-33b45e38fa2c?w=400&h=300&fit=crop&q=80', specs: { Pannello: 'Nano IPS', Risoluzione: '4K UHD', Refresh: '144Hz' } },
-];
+// slug stabile da una famiglia ("INFORMATICA E COMPONENTISTICA" -> "informatica-e-componentistica")
+function _catSlug(s) {
+  return (s || '').toString().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')   // togli accenti
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'altro';
+}
+
+// icona euristica per famiglia (fallback 📦); display "grezzo", nome famiglia as-is
+function _catIcon(fam) {
+  const f = (fam || '').toLowerCase();
+  if (/notebook|tablet/.test(f))                 return '💻';
+  if (/smartphone|navigat/.test(f))              return '📱';
+  if (/monitor/.test(f))                         return '🖥️';
+  if (/stampant|plotter|fax|multifunzione/.test(f)) return '🖨️';
+  if (/networking|sorvegli/.test(f))             return '📡';
+  if (/server|personal computer/.test(f))        return '🗄️';
+  if (/cavi/.test(f))                            return '🔌';
+  if (/software/.test(f))                        return '💿';
+  if (/ufficio|consumabil/.test(f))             return '🖇️';
+  if (/home entertainment|televisor|audio/.test(f)) return '📺';
+  if (/elettrodom|regalo|epilat|rasoi/.test(f)) return '🏠';
+  if (/informatica|component/.test(f))           return '🖥️';
+  return '📦';
+}
+
+// Ricostruisce CATEGORIES (in place, così tutti i riferimenti restano validi) dai
+// prodotti reali: una voce per famiglia, conteggio reale, gruppi come sotto-filtri.
+function _rebuildCategories() {
+  const map = new Map();
+  PRODUCTS.forEach(function (p) {
+    if (!p._famiglia) return;
+    let e = map.get(p.category);
+    if (!e) {
+      e = { id: p.category, name: p._famiglia, icon: _catIcon(p._famiglia), img: '', count: 0, sub: [], _seen: {} };
+      map.set(p.category, e);
+    }
+    e.count++;
+    if (p.sub && !e._seen[p.sub]) { e._seen[p.sub] = true; e.sub.push(p.sub); }
+  });
+  const arr = Array.from(map.values()).sort(function (a, b) { return b.count - a.count; });
+  arr.forEach(function (e) { delete e._seen; e.sub.sort(); });
+  CATEGORIES.length = 0;
+  arr.forEach(function (c) { CATEGORIES.push(c); });
+}
+
+// Catalogo demo rimosso (18/06/2026): il sito mostra SOLO i prodotti reali dal gestionale
+// SellPilot, iniettati a runtime da _mergeSpProducts via l'API /pilot-store/v/<slug>/products.
+const PRODUCTS = [];
 
 // ── Integrazione SellPilot API ─────────────────────────────────────────────
 // Configurazione: imposta APSTORE_TENANT_SLUG prima di caricare data.js
@@ -72,9 +81,16 @@ const _SP_KEY   = 'apstore_sp_products_v1';
       if (!data || !Array.isArray(data.items)) return;
       try { sessionStorage.setItem(_SP_KEY, JSON.stringify(data.items)); } catch (_) {}
       _mergeSpProducts(data.items);
-      if (typeof window.__apstoreRender === 'function') window.__apstoreRender();
+      _afterSpMerge();
     })
     .catch(function () {}); // fail silenzioso — il sito funziona anche senza API
+
+  // Notifica le pagine: prima il menu categorie (dinamico), poi la griglia prodotti.
+  // Hook opzionali: ogni pagina registra solo quelli che la riguardano.
+  function _afterSpMerge() {
+    if (typeof window.__apstoreRenderCategories === 'function') window.__apstoreRenderCategories();
+    if (typeof window.__apstoreRender === 'function') window.__apstoreRender();
+  }
 
   function _mergeSpProducts(items) {
     var existing = {};
@@ -83,27 +99,31 @@ const _SP_KEY   = 'apstore_sp_products_v1';
     var idx = 0;
     items.forEach(function (p) {
       if (existing[p.id]) return;
+      existing[p.id] = true; // evita doppioni anche all'interno dello stesso payload
+      var fam = p.famiglia || '';
       PRODUCTS.push({
-        id:       maxId + (++idx),
-        _spId:    p.id,
-        name:     p.titolo || 'Prodotto',
-        brand:    p.marca  || '',
-        category: 'componenti-pc', // categoria di fallback — il tenant può mapparla
-        sub:      p.gruppo || '',
-        price:    p.prezzo || 0,
-        oldPrice: null,
-        rating:   4.5,
-        reviews:  0,
-        badge:    null,
-        icon:     '📦',
-        sku:      p.sku    || ('SP-' + p.id),
-        stock:    p.stock_disponibile !== 'Esaurito',
-        desc:     p.descrizione || '',
-        img:      p.url_foto   || '',
-        specs:    {},
-        _sp:      true,
+        id:        maxId + (++idx),
+        _spId:     p.id,
+        name:      p.titolo || 'Prodotto',
+        brand:     p.marca  || '',
+        category:  _catSlug(fam),   // categoria reale dal gestionale (famiglia)
+        _famiglia: fam,             // nome famiglia grezzo per il menu dinamico
+        sub:       p.gruppo || '',  // sotto-categoria reale (gruppo)
+        price:     p.prezzo || 0,
+        oldPrice:  null,
+        rating:    4.5,
+        reviews:   0,
+        badge:     null,
+        icon:      _catIcon(fam),
+        sku:       p.sku    || ('SP-' + p.id),
+        stock:     p.stock_disponibile !== 'Esaurito',
+        desc:      p.descrizione || '',
+        img:       p.url_foto   || '',
+        specs:     {},
+        _sp:       true,
       });
     });
+    _rebuildCategories(); // ricostruisci il menu categorie dai prodotti reali
   }
 })();
 
