@@ -52,6 +52,51 @@ function _rebuildCategories() {
   arr.forEach(function (c) { CATEGORIES.push(c); });
 }
 
+// ── MAPPA CATEGORIE STORE (bozza v0.2) ──────────────────────────────────────
+// Normalizza le famiglie/gruppi eterogenei dei fornitori in UN albero pulito.
+// 4 passi: ① escludi fuori-perimetro · ② parola chiave sulla famiglia ·
+// ③ se la famiglia è generica ("ACCESSORI") usa il gruppo · ④ altrimenti "Da rivedere".
+// Ritorna null se il prodotto è da ESCLUDERE (non mostrare).
+var _CAT_RULES = [
+  [/NOTEBOOK|PORTATIL|ULTRABOOK/,                              'Notebook'],
+  [/TABLET|E-READER|EREADER/,                                  'Tablet'],
+  [/COVER|CUSTODI|PELLICOL|VETRO TEMPERAT/,                    'Accessori Smartphone'],
+  [/SMARTPHONE|CELLULAR|TELEFON|NAVIGATOR|SMARTWATCH/,         'Smartphone e Telefonia'],
+  [/MONITOR|POLLICI/,                                          'Monitor'],
+  [/STAMPANT|PLOTTER|MULTIFUNZIONE|SCANNER|\bFAX\b|PLASTIFICATRIC/, 'Stampanti e Scanner'],
+  [/TONER|CARTUC|CONSUMABIL|INKJET|NASTR|\bDRUM\b|GETTO/,      'Consumabili stampa'],
+  [/CONTINUIT|\bUPS\b|POWER DISTRIBUTION|\bPDU\b|BATTERIE|\bPILE\b|CARICABATTER/, 'Alimentazione e Batterie'],
+  [/HARD DISK|\bHDD\b|\bSSD\b|\bNAS\b|STORAGE|CHIAVETT|PENDRIVE|MEMORIE FLASH|SCHEDE DI MEMORIA|\bUSB\b/, 'Storage'],
+  [/MEMORIE RAM|\bRAM\b|MODULI DI MEMORIA|MEMORIA DDR|\bDDR/,  'Memorie RAM'],
+  [/SWITCH|ROUTER|FIREWALL|ACCESS POINT|WIRELESS|WI-?FI|NETWORKING|\bRETE\b|PATCH|RJ45|\bLAN\b|GATEWAY|MODEM|CABLING|\bRACK\b|ARMADI|FIBRA/, 'Networking'],
+  [/SORVEGLIANZA|TELECAMER|VIDEOCAMER|\bNVR\b|\bDVR\b|IP CAM|VIDEOSORV|CITOFON|ALLARM/, 'Videosorveglianza'],
+  [/ENDPOINT|SECURITY|ANTIVIRUS/,                             'Sicurezza IT'],
+  [/SERVER|WORKSTATION|PERSONAL COMPUTER|BAREBONE|MINI ?PC|MIDDLE-TOWER|\bPC\b/, 'Server e PC'],
+  [/MAINBOARD|MOTHERBOARD|SCHEDA MADRE|\bCPU\b|PROCESSOR|SCHEDE (VIDEO|GRAFICHE)|\bGPU\b|ALIMENTATOR|\bCASE\b|DISSIPATOR|VENTOLE|RAFFREDDAMENTO|COMPONENTISTICA|INFORMATICA E/, 'Componenti PC'],
+  [/SOFTWARE|LICENZ|SISTEMA OPERATIV|OFFICE 365|MICROSOFT 365/, 'Software'],
+  [/PLAYSTATION|XBOX|NINTENDO|GAMING|CONSOLE|JOYSTICK|GAMEPAD/, 'Gaming'],
+  [/FOTOCAMER|FOTOGRAF|OBIETTIV|REFLEX|MIRRORLESS/,           'Fotografia'],
+  [/\bTV\b|TELEVISOR|HOME ENTERTAINMENT|\bAUDIO\b|CUFFIE|SPEAKER|SOUNDBAR|\bCASSE\b|HI-?FI|PROIETTOR/, 'Audio e Video'],
+  [/ELETTRODOM|CLIMATIZ|CONDIZIONAT|VENTILATOR|CARICA FRONTALE|LIBERA INSTALLAZIONE/, 'Elettrodomestici'],
+  [/CAVETTERIA|\bCAVI\b|\bCAVO\b|ADATTATOR|CONVERTITOR|STAFFE|SUPPORT|PRESE/, 'Cavi, Staffe e Adattatori'],
+  [/MOUSE|TASTIER|WEBCAM|LETTORE CODICE|ERGONOM/,             'Mouse, Tastiere e Periferiche'],
+  [/PENNE|PENNARELLI|MARCATOR|EVIDENZIAT|MATITE|ROLLER|CANCELLERIA|COLLE|FORBICI|GRAFFETTE|SPILLATRIC|CUCITRIC/, 'Cancelleria e Scrittura'],
+  [/QUADERNI|CARTELL|CARTONCIN|\bCARTA\b|BLOCCHI|RUBRICHE|REGISTRI|BUSTE|RACCOGLITOR|ETICHETT|ARCHIVIAZIONE|PORTALISTINI|COMUNICAZIONE VISIVA/, 'Carta e Archiviazione'],
+];
+var _CAT_ESCLUDI = /SERVIZI|GARANZIE|GARANZIA|ESTENSIONE|COSTRUZIONI|GIOCATTOL|PUZZLE|PELUCHE|TEMPERA|PASTELLI|ABBIGLIAMENT|\bDPI\b|TYVEK|GUANTI|SCARPE|CALZATUR|ELECTRIC BIKE|TELESCOP|PRODOTTI PER IL BAGNO/;
+
+function _mapCategoria(famiglia, gruppo) {
+  var t = (famiglia || '').toUpperCase();
+  // ③ famiglia generica → usa il sotto-livello (gruppo)
+  if (/^ACC(\.|ESSORI)/.test(t) && gruppo) t = (gruppo || '').toUpperCase();
+  // ① buttafuori
+  if (_CAT_ESCLUDI.test(t)) return null;
+  // ② parola chiave
+  for (var i = 0; i < _CAT_RULES.length; i++) if (_CAT_RULES[i][0].test(t)) return _CAT_RULES[i][1];
+  // ④ non riconosciuto
+  return 'Da rivedere';
+}
+
 // Catalogo demo rimosso (18/06/2026): il sito mostra SOLO i prodotti reali dal gestionale
 // SellPilot, iniettati a runtime da _mergeSpProducts via l'API /pilot-store/v/<slug>/products.
 const PRODUCTS = [];
@@ -105,20 +150,22 @@ const _SP_KEY   = 'apstore_sp_products_v1';
       if (existing[p.id]) return;
       existing[p.id] = true; // evita doppioni anche all'interno dello stesso payload
       var fam = p.famiglia || '';
+      var cat = _mapCategoria(fam, p.gruppo);   // mappa categoria store (bozza v0.2)
+      if (cat === null) return;                 // fuori perimetro → non mostrare
       PRODUCTS.push({
         id:        maxId + (++idx),
         _spId:     p.id,
         name:      p.titolo || 'Prodotto',
         brand:     p.marca  || '',
-        category:  _catSlug(fam),   // categoria reale dal gestionale (famiglia)
-        _famiglia: fam,             // nome famiglia grezzo per il menu dinamico
-        sub:       p.gruppo || '',  // sotto-categoria reale (gruppo)
+        category:  _catSlug(cat),   // categoria store normalizzata
+        _famiglia: cat,             // nome categoria store per il menu
+        sub:       p.gruppo || '',  // sotto-categoria = gruppo grezzo
         price:     p.prezzo || 0,
         oldPrice:  null,
         rating:    4.5,
         reviews:   0,
         badge:     null,
-        icon:      _catIcon(fam),
+        icon:      _catIcon(cat),
         sku:       p.sku    || ('SP-' + p.id),
         stock:     p.stock_disponibile !== 'Esaurito',
         desc:      p.descrizione || '',
