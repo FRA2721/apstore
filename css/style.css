@@ -686,3 +686,6 @@ footer.site-footer { background: #111827; color: #9ca3af; padding: 56px 0 24px; 
 .fx-roulette:hover::after { transform: translateY(0); }
 /* margine verticale per non tagliare i discendenti con overflow:hidden */
 .l-footer-col-links a.fx-roulette { line-height: 1.5; }
+
+/* freccia link esterni: orizzontale e leggermente più corta */
+.arr-h { font-size: .82em; }
