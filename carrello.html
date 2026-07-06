@@ -278,7 +278,7 @@
 
   function updateSummary() {
     const sub   = Cart.getTotal();
-    const ship  = sub >= 100 ? 0 : 4.99;
+    const ship  = sub >= 100 ? 0 : 10;
     const total = sub + ship;
     document.getElementById('oSub').textContent   = formatPrice(sub);
     document.getElementById('oShip').textContent  = ship === 0 ? 'Gratuita 🎉' : formatPrice(ship);
