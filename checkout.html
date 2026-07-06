@@ -95,22 +95,9 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           Metodo di Spedizione
         </h3>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--indigo);border-radius:var(--radius-sm);cursor:pointer;background:var(--indigo-soft);">
-            <input type="radio" name="ship" value="express" checked style="accent-color:var(--indigo);">
-            <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Spedizione Express 24h</div><div style="font-size:.78rem;color:var(--text-muted);">Ordini entro le 14:00 — consegna domani</div></div>
-            <span style="font-weight:700;color:var(--success);font-size:.88rem;">Gratuita</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
-            <input type="radio" name="ship" value="standard" style="accent-color:var(--indigo);">
-            <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Spedizione Standard 2–3 gg</div><div style="font-size:.78rem;color:var(--text-muted);">Tracking incluso · gratis sopra €100</div></div>
-            <span style="font-weight:700;font-size:.88rem;">€10,00</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;">
-            <input type="radio" name="ship" value="pickup" style="accent-color:var(--indigo);">
-            <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Ritiro in Punto di Consegna</div><div style="font-size:.78rem;color:var(--text-muted);">Scegli il punto più vicino</div></div>
-            <span style="font-weight:700;font-size:.88rem;">€2,99</span>
-          </label>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--indigo-soft);">
+          <div style="flex:1;"><div style="font-weight:700;font-size:.88rem;">Spedizione con corriere espresso</div><div style="font-size:.78rem;color:var(--text-muted);">Consegna 2–3 giorni lavorativi · tracking incluso</div></div>
+          <span style="font-weight:700;font-size:.82rem;color:var(--success);">Gratis sopra €100<br><span style="color:var(--text-muted);font-weight:600;">altrimenti €10</span></span>
         </div>
       </div>
 
@@ -164,7 +151,7 @@
       <h3>Riepilogo Ordine</h3>
       <div id="ckItems" style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);"></div>
       <div class="order-row"><span>Subtotale</span><span id="ckSub">€0,00</span></div>
-      <div class="order-row"><span>Spedizione</span><span style="color:var(--success);font-weight:600;">Gratuita</span></div>
+      <div class="order-row"><span>Spedizione</span><span id="ckShip" style="font-weight:600;">—</span></div>
       <div class="order-row order-total"><span>Totale</span><span id="ckTotal" style="color:var(--price);">€0,00</span></div>
       <button class="btn-checkout" style="margin-top:18px;" onclick="placeOrder()">🔒 Conferma Ordine</button>
       <p style="text-align:center;font-size:.72rem;color:var(--text-muted);margin-top:10px;">
@@ -278,8 +265,12 @@
         <strong style="font-size:.88rem;">${formatPrice(p.price * item.qty)}</strong>
       </div>`;
   });
+  const ship = sub >= 100 ? 0 : 10;
+  const ckShipEl = document.getElementById('ckShip');
+  ckShipEl.textContent = ship === 0 ? 'Gratuita 🎉' : formatPrice(ship);
+  ckShipEl.style.color = ship === 0 ? 'var(--success)' : 'var(--text-dark)';
   document.getElementById('ckSub').textContent   = formatPrice(sub);
-  document.getElementById('ckTotal').textContent = formatPrice(sub);
+  document.getElementById('ckTotal').textContent = formatPrice(sub + ship);
 
   function showPay(m) {
     ['payCard','payPaypal','payApple','payRate'].forEach(id => document.getElementById(id).style.display = 'none');
