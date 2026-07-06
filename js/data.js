@@ -59,7 +59,11 @@ const PRODUCTS = [];
 // ── Integrazione SellPilot API ─────────────────────────────────────────────
 // Configurazione: imposta APSTORE_TENANT_SLUG prima di caricare data.js
 // oppure tramite <script>window.APSTORE_TENANT_SLUG = 'tuo-slug';</script>
-const _SP_API   = 'https://app.sellpilot.it/api';
+// API base: same-origin per default (ogni ambiente parla col PROPRIO backend
+// SellPilot, che nginx proxia sotto /api) — override opzionale via
+// window.APSTORE_API_BASE per servire lo storefront da un host senza backend.
+const _SP_API   = (typeof window !== 'undefined' && window.APSTORE_API_BASE)
+                  || ((typeof location !== 'undefined' ? location.origin : '') + '/api');
 const _SP_SLUG  = (typeof window !== 'undefined' && window.APSTORE_TENANT_SLUG) || '';
 const _SP_KEY   = 'apstore_sp_products_v1';
 
