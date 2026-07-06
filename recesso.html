@@ -3,38 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registrati — ApStore</title>
+  <title>Diritto di recesso e resi — ApStore</title>
+  <meta name="description" content="Come esercitare il diritto di recesso su apStore.net: 14 giorni, modulo tipo di recesso, modalità di restituzione, rimborso ed esclusioni ai sensi del Codice del Consumo.">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- ══════════════ INTRO SPLASH ══════════════ -->
-<div id="introSplash" style="position:fixed;inset:0;z-index:9999;background:#0a0a14;display:flex;align-items:center;justify-content:center;pointer-events:all;">
-  <div id="introWord" style="font-family:'Google Sans','Helvetica Neue',Arial,sans-serif;font-size:clamp(4rem,18vw,16rem);font-weight:200;letter-spacing:-.04em;line-height:.9;color:#fff;opacity:0;">Registrati</div>
-</div>
-<style>
-@keyframes introFadeIn  { from{opacity:0;transform:translateX(0)} to{opacity:1;transform:translateX(0)} }
-@keyframes introFadeOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(-18vw)} }
-</style>
-<script>
-(function(){
-  const splash=document.getElementById('introSplash'),word=document.getElementById('introWord');
-  word.style.animation='introFadeIn .7s cubic-bezier(.16,1,.3,1) .15s forwards';
-  setTimeout(()=>{
-    word.style.animation='introFadeOut .6s cubic-bezier(.7,0,.84,0) forwards';
-    setTimeout(()=>{
-      splash.style.transition='opacity .65s cubic-bezier(.16,1,.3,1)';
-      splash.style.opacity='0';
-      setTimeout(()=>{ splash.style.display='none'; },680);
-    },1050);
-  },2000);
-})();
-</script>
-
 <!-- ══════════════ NAV ══════════════ -->
-<nav class="l-nav" id="lNav">
+<nav class="l-nav scrolled" id="lNav">
   <a href="index.html" class="l-logo">Ap<span>Store</span></a>
   <div class="l-nav-right">
+    <a href="carrello.html" class="l-cart-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="l-cart-count" id="cartBadge" style="display:none">0</span>
+    </a>
     <a href="catalogo.html" class="l-btn-dark">Shop →</a>
     <button class="l-btn-light" onclick="toggleMenu()">Menu ••</button>
   </div>
@@ -60,69 +42,76 @@
   </div>
 </div>
 
-<div class="auth-wrap">
-  <div class="auth-card" style="max-width:480px;">
-    <div style="text-align:center;margin-bottom:28px;">
-      <div style="width:52px;height:52px;border-radius:50%;background:var(--indigo-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-      </div>
-      <h2>Crea il tuo account</h2>
-      <p class="auth-sub">Unisciti a 50.000+ clienti soddisfatti</p>
+<!-- ══════════════ HERO ══════════════ -->
+<div class="legal-hero">
+  <div class="legal-breadcrumb">
+    <a href="index.html">Home</a><span>›</span><span>Recesso e resi</span>
+  </div>
+  <h1>Diritto di recesso e resi</h1>
+  <p class="legal-updated">Ai sensi degli artt. 52 e ss. del Codice del Consumo (D.Lgs. 206/2005) · ultimo aggiornamento: luglio 2026</p>
+</div>
+
+<!-- ══════════════ CONTENUTO ══════════════ -->
+<div class="legal-wrap">
+  <aside class="legal-toc">
+    <div class="legal-toc-title">Indice</div>
+    <a href="#chi">Chi può recedere</a>
+    <a href="#termini">Termini</a>
+    <a href="#come">Come esercitarlo</a>
+    <a href="#modulo">Modulo di recesso</a>
+    <a href="#restituzione">Restituzione</a>
+    <a href="#rimborso">Rimborso</a>
+    <a href="#esclusioni">Esclusioni</a>
+  </aside>
+
+  <div class="legal-body">
+    <h2 id="chi">1. Chi può recedere</h2>
+    <p>Il diritto di recesso spetta al <strong>consumatore</strong>, ossia alla persona fisica che acquista per scopi estranei all'attività imprenditoriale o professionale. Non si applica agli acquisti effettuati con fattura intestata a partita IVA (acquisti professionali).</p>
+
+    <h2 id="termini">2. Termini</h2>
+    <p>Puoi recedere <strong>entro 14 giorni</strong> dal giorno in cui tu o un terzo da te designato ricevete fisicamente il bene, <strong>senza alcuna motivazione</strong> e senza penalità. In caso di ordine con più beni consegnati separatamente, il termine decorre dalla ricezione dell'ultimo bene.</p>
+
+    <h2 id="come">3. Come esercitare il recesso</h2>
+    <p>Prima della scadenza dei 14 giorni comunica la tua decisione con una dichiarazione esplicita, inviando:</p>
+    <ul>
+      <li>una email a <a href="mailto:info@apstore.net">info@apstore.net</a> (oggetto: "Recesso ordine n. …"), oppure</li>
+      <li>una PEC a <a href="mailto:apstore@pec.it">apstore@pec.it</a>,</li>
+    </ul>
+    <p>utilizzando, se lo desideri, il modulo tipo qui sotto. Ti invieremo conferma di ricezione della richiesta.</p>
+
+    <h2 id="modulo">4. Modulo tipo di recesso</h2>
+    <div class="legal-form-box">
+      Destinatario: Piccolo Antonio (apStore.net), Via dei Tulipani 4/B, 87055 San Giovanni in Fiore (CS) — info@apstore.net<br><br>
+      Con la presente io/noi notifichiamo il recesso dal contratto di vendita dei seguenti beni:<br>
+      ______________________________________________<br><br>
+      Ordinato il / ricevuto il: __________________________<br>
+      Numero d'ordine: _________________________________<br>
+      Nome del consumatore: ____________________________<br>
+      Indirizzo del consumatore: ________________________<br>
+      Data: ___________________________________________<br>
+      Firma (solo se il modulo è inviato in versione cartacea): ______________________
     </div>
 
-    <form onsubmit="doRegister(event)">
-      <div class="form-grid">
-        <div class="form-field">
-          <label>Nome *</label>
-          <input type="text" id="rNome" placeholder="Mario" required>
-        </div>
-        <div class="form-field">
-          <label>Cognome *</label>
-          <input type="text" id="rCognome" placeholder="Rossi" required>
-        </div>
-      </div>
-      <div class="form-field">
-        <label>Email *</label>
-        <input type="email" id="rEmail" placeholder="mario@esempio.it" required>
-      </div>
-      <div class="form-field">
-        <label>Telefono <span style="color:var(--text-muted);font-weight:400;">(opzionale)</span></label>
-        <input type="tel" placeholder="+39 000 0000000">
-      </div>
-      <div class="form-grid">
-        <div class="form-field">
-          <label>Password *</label>
-          <input type="password" id="rPwd" placeholder="min. 8 caratteri" required minlength="8">
-        </div>
-        <div class="form-field">
-          <label>Conferma *</label>
-          <input type="password" id="rPwd2" placeholder="••••••••" required>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px;">
-        <label class="form-check">
-          <input type="checkbox" id="chkTerms" required>
-          Accetto le <a href="condizioni-vendita.html" target="_blank" rel="noopener" style="color:var(--indigo);">Condizioni di vendita</a> e la <a href="privacy.html" target="_blank" rel="noopener" style="color:var(--indigo);">Privacy Policy</a>
-        </label>
-        <label class="form-check">
-          <input type="checkbox">
-          Voglio ricevere offerte e novità via email
-        </label>
-      </div>
-      <button type="submit" class="btn-primary" style="width:100%;padding:12px;font-size:.92rem;">Crea Account →</button>
-    </form>
+    <h2 id="restituzione">5. Restituzione del bene</h2>
+    <p>Dopo aver comunicato il recesso, restituisci il bene <strong>entro 14 giorni</strong>. Il prodotto va reso <strong>integro, completo di ogni accessorio</strong> e, preferibilmente, nell'imballo originale. Hai diritto di verificare la natura e le caratteristiche del bene, ma sei responsabile della diminuzione di valore dovuta a una manipolazione diversa da quella necessaria a tale verifica. I <strong>costi diretti di restituzione</strong> sono a carico del cliente, salvo diversa indicazione.</p>
 
-    <div class="auth-divider">oppure</div>
+    <h2 id="rimborso">6. Rimborso</h2>
+    <p>Ti rimborseremo tutti i pagamenti ricevuti, comprese le spese di consegna standard, <strong>entro 14 giorni</strong> dal momento in cui siamo informati del recesso. Possiamo sospendere il rimborso fino al ricevimento del bene reso o alla prova dell'avvenuta spedizione. Il rimborso avviene con lo stesso mezzo di pagamento usato per l'acquisto, senza costi aggiuntivi.</p>
 
-    <button class="btn-social" onclick="socialReg('Google')">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Registrati con Google
-    </button>
-
-    <div class="auth-footer">Hai già un account? <a href="login.html">Accedi →</a></div>
+    <h2 id="esclusioni">7. Esclusioni</h2>
+    <p>Ai sensi dell'art. 59 del Codice del Consumo, il diritto di recesso è escluso, tra l'altro, per:</p>
+    <ul>
+      <li>beni sigillati non idonei alla restituzione per motivi igienici, aperti dopo la consegna;</li>
+      <li>software, contenuti digitali e prodotti sigillati aperti dopo la consegna (es. licenze, codici);</li>
+      <li>beni confezionati su misura o chiaramente personalizzati.</li>
+    </ul>
+    <div class="legal-callout">
+      Il recesso è cosa diversa dalla <a href="condizioni-vendita.html#garanzia">garanzia legale di conformità</a> (24 mesi), che copre i difetti del prodotto e resta sempre valida.
+    </div>
   </div>
 </div>
 
+<!-- ══════════════ FOOTER ══════════════ -->
 <footer class="l-footer l-footer-light" style="position:relative;z-index:2;">
   <div class="l-footer-inner">
 
@@ -209,32 +198,12 @@
   </div>
 </footer>
 
-<script>window.APSTORE_TENANT_SLUG='apstore';</script>
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
 <script src="js/cookie.js"></script>
 <script>
-  function doRegister(e) {
-    e.preventDefault();
-    const nome    = document.getElementById('rNome').value;
-    const cognome = document.getElementById('rCognome').value;
-    const email   = document.getElementById('rEmail').value;
-    const pwd     = document.getElementById('rPwd').value;
-    const pwd2    = document.getElementById('rPwd2').value;
-    if (pwd !== pwd2) { showToast('Le password non coincidono', 'error'); return; }
-    localStorage.setItem('apstore_user', JSON.stringify({ email, name: nome + ' ' + cognome }));
-    showToast('Account creato con successo! 🎉', 'success');
-    setTimeout(() => window.location.href = 'index.html', 1200);
-  }
-  function socialReg(p) {
-    localStorage.setItem('apstore_user', JSON.stringify({ email: `utente@${p.toLowerCase()}.com`, name: 'Utente ' + p }));
-    showToast(`Registrazione con ${p} completata!`, 'success');
-    setTimeout(() => window.location.href = 'index.html', 1200);
-  }
-</script>
-<script>
-window.addEventListener('scroll',()=>{ document.getElementById('lNav').classList.toggle('scrolled',scrollY>50); },{passive:true});
-function toggleMenu(){ const m=document.getElementById('lMenu'); m.classList.toggle('open'); document.body.style.overflow=m.classList.contains('open')?'hidden':''; }
+window.addEventListener('scroll',()=>{document.getElementById('lNav').classList.toggle('scrolled',scrollY>50);},{passive:true});
+function toggleMenu(){const m=document.getElementById('lMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 </script>
 </body>
 </html>

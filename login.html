@@ -103,14 +103,96 @@
   </div>
 </div>
 
-<footer class="l-footer">
-  <div class="l-footer-bottom">
-    <span>© 2026 ApStore — Powered by <a href="https://sellpilot.it">SellPilot.it</a></span>
+<footer class="l-footer l-footer-light" style="position:relative;z-index:2;">
+  <div class="l-footer-inner">
+
+    <!-- Brand -->
+    <div class="l-footer-brand">
+      <a href="index.html" class="l-footer-brand-logo">Ap<span>Store</span></a>
+      <p class="l-footer-tagline">Il tech store italiano. Prodotti selezionati, prezzi trasparenti e spedizione rapida in tutta Italia.</p>
+    </div>
+
+    <!-- Colonne -->
+    <div class="l-footer-nav">
+
+      <div class="l-footer-nav-col">
+        <p class="l-footer-col-label">Negozio</p>
+        <div class="l-footer-col-links">
+          <a href="catalogo.html" class="fx-roulette" data-text="Catalogo"><span>Catalogo</span></a>
+          <a href="blog.html" class="fx-roulette" data-text="Blog"><span>Blog</span></a>
+          <a href="login.html" class="fx-roulette" data-text="Account"><span>Account</span></a>
+          <a href="registrati.html" class="fx-roulette" data-text="Registrati"><span>Registrati</span></a>
+        </div>
+      </div>
+
+      <div class="l-footer-nav-col">
+        <p class="l-footer-col-label">Assistenza</p>
+        <div class="l-footer-col-links">
+          <a href="contatti.html" class="fx-roulette" data-text="Contatti"><span>Contatti</span></a>
+          <a href="spedizioni.html" class="fx-roulette" data-text="Spedizioni"><span>Spedizioni</span></a>
+          <a href="recesso.html" class="fx-roulette" data-text="Recesso e resi"><span>Recesso e resi</span></a>
+          <a href="condizioni-vendita.html#garanzia" class="fx-roulette" data-text="Garanzia 24 mesi"><span>Garanzia 24 mesi</span></a>
+        </div>
+      </div>
+
+      <div class="l-footer-nav-col">
+        <p class="l-footer-col-label">Legale</p>
+        <div class="l-footer-col-links">
+          <a href="note-legali.html" class="fx-roulette" data-text="Note legali"><span>Note legali</span></a>
+          <a href="privacy.html" class="fx-roulette" data-text="Privacy"><span>Privacy</span></a>
+          <a href="cookie.html" class="fx-roulette" data-text="Cookie"><span>Cookie</span></a>
+          <a href="condizioni-vendita.html" class="fx-roulette" data-text="Condizioni di vendita"><span>Condizioni di vendita</span></a>
+          <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" class="fx-roulette" data-text="Risoluzione ODR ↗"><span>Risoluzione ODR ↗</span></a>
+        </div>
+      </div>
+
+      <div class="l-footer-nav-col">
+        <p class="l-footer-col-label">Contatti</p>
+        <div class="l-footer-col-links">
+          <a href="mailto:info@apstore.net" class="fx-roulette" data-text="info@apstore.net"><span>info@apstore.net</span></a>
+          <a href="tel:+3909841805792" class="fx-roulette" data-text="0984 1805792"><span>0984 1805792</span></a>
+          <span class="l-footer-col-note">Lun–Ven, orario d'ufficio</span>
+          <a href="mailto:apstore@pec.it" class="fx-roulette" data-text="PEC apstore@pec.it"><span>PEC apstore@pec.it</span></a>
+          <a href="https://sellpilot.it" target="_blank" rel="noopener" class="fx-roulette" data-text="Partner: SellPilot ↗"><span>Partner: SellPilot ↗</span></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Riga fiducia -->
+    <div class="l-footer-trust">
+      <div class="l-footer-trust-items">
+        <span><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Pagamenti sicuri</span>
+        <span><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Garanzia 24 mesi</span>
+        <span><svg viewBox="0 0 24 24"><path d="M3 8h11a5 5 0 0 1 0 10H9"/><path d="M6 5L3 8l3 3"/></svg>Reso facile</span>
+        <span><svg viewBox="0 0 24 24"><path d="M3 7h11v8H3z"/><path d="M14 10h4l3 3v2h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>Spedizione gratuita oltre €49</span>
+      </div>
+      <div class="l-footer-pay" aria-label="Metodi di pagamento accettati">
+        <span class="pay-badge">Visa</span>
+        <span class="pay-badge">Mastercard</span>
+        <span class="pay-badge">PayPal</span>
+        <span class="pay-badge">Bonifico</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="l-footer-bottom-light">
+    <p class="l-footer-fineprint">
+      © 2008–2026 <strong>ApStore</strong> — Piccolo Antonio · Via dei Tulipani 4/B, 87055 San Giovanni in Fiore (CS)<br>
+      P.IVA 02951010780 · REA CS-200870 · Codice SDI M5UXCR1
+    </p>
+    <div class="l-footer-meta">
+      <button class="l-scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Torna su">↑</button>
+    </div>
   </div>
 </footer>
 
+<script>window.APSTORE_TENANT_SLUG='apstore';</script>
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
+<script src="js/cookie.js"></script>
 <script>
   function doLogin(e) {
     e.preventDefault();
