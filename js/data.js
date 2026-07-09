@@ -63,7 +63,7 @@ var _CAT_RULES = [
   [/TABLET|E-READER|EREADER/,                                  'Tablet'],
   [/COVER|CUSTODI|PELLICOL|VETRO TEMPERAT/,                    'Accessori Smartphone'],
   [/SMARTPHONE|CELLULAR|TELEFON|NAVIGATOR|SMARTWATCH/,         'Smartphone e Telefonia'],
-  [/MONITOR|POLLICI/,                                          'Monitor'],
+  [/MONITOR|POLLICI|DIGITAL SIGNAGE|SIGNAGE|VIDEOWALL|DVLED|\bLFD\b/,                                          'Monitor'],
   [/STAMPANT|PLOTTER|MULTIFUNZIONE|SCANNER|\bFAX\b|PLASTIFICATRIC/, 'Stampanti e Scanner'],
   [/TONER|CARTUC|CONSUMABIL|INKJET|NASTR|\bDRUM\b|GETTO/,      'Consumabili stampa'],
   [/CONTINUIT|\bUPS\b|POWER DISTRIBUTION|\bPDU\b|BATTERIE|\bPILE\b|CARICABATTER/, 'Alimentazione e Batterie'],
@@ -94,8 +94,8 @@ function _mapCategoria(famiglia, gruppo) {
   if (_CAT_ESCLUDI.test(t)) return null;
   // ② parola chiave
   for (var i = 0; i < _CAT_RULES.length; i++) if (_CAT_RULES[i][0].test(t)) return _CAT_RULES[i][1];
-  // ④ non riconosciuto
-  return 'Da rivedere';
+  // ④ non riconosciuto / fuori-perimetro → categoria dedicata visibile (non escludere)
+  return 'Altro';
 }
 
 // Catalogo demo rimosso (18/06/2026): il sito mostra SOLO i prodotti reali dal gestionale
