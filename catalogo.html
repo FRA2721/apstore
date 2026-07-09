@@ -34,11 +34,10 @@
     .subcats a:hover { color: var(--indigo); }
     .subcats a.active { color: var(--indigo); font-weight: 700; }
     .subcats a .sub-count { font-size: .66rem; color: var(--text-muted); }
-    /* Header categoria: immagine rappresentativa + descrizione */
-    .cat-header { display: flex; align-items: center; gap: 18px; margin-top: 18px; max-width: 780px; }
-    .cat-header-img { width: 84px; height: 84px; flex: 0 0 84px; border-radius: 16px; object-fit: cover; box-shadow: 0 6px 20px rgba(0,0,0,.12); background: #fff; }
-    .cat-desc { font-size: .95rem; line-height: 1.55; color: var(--text-body); margin: 0; }
-    @media (max-width: 560px) { .cat-header { gap: 12px; } .cat-header-img { width: 60px; height: 60px; flex-basis: 60px; } .cat-desc { font-size: .88rem; } }
+    /* Header categoria: paragrafo introduttivo SEO (nessuna immagine) */
+    .cat-header { margin-top: 16px; max-width: 720px; }
+    .cat-desc { font-size: .95rem; line-height: 1.6; color: var(--text-body); margin: 0; }
+    @media (max-width: 560px) { .cat-desc { font-size: .88rem; } }
 
     /* @keyframes usato dall'accordion filtri mobile (.sb-body) */
     @keyframes subReveal { from { opacity: .3; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
@@ -156,7 +155,6 @@
       <span id="breadCur">Catalogo</span>
     </div>
     <div class="cat-header" id="catHeader" hidden>
-      <img class="cat-header-img" id="catHeaderImg" alt="" loading="lazy" onerror="this.style.display='none'">
       <p class="cat-desc" id="catDesc"></p>
     </div>
   </div>
@@ -388,34 +386,33 @@
   }
   // Descrizioni curate per categoria (SEO + UX); fallback automatico per le altre
   const CAT_DESC = {
-    'Componenti PC': 'CPU, schede madri, GPU, RAM, storage, alimentatori e case per assemblare o potenziare il tuo PC.',
-    'Notebook': 'Portatili per lavoro, studio e gaming: ultrabook, workstation e 2-in-1 delle migliori marche.',
-    'Server e PC': 'Server, workstation e PC desktop affidabili per aziende e professionisti.',
-    'Monitor': 'Monitor per ufficio, gaming e produttività: Full HD, 4K, ultrawide e professionali.',
-    'Smartphone e Telefonia': 'Smartphone, telefoni e accessori delle migliori marche, con garanzia ufficiale.',
-    'Networking': 'Switch, router, firewall, access point e cablaggio per costruire una rete solida.',
-    'Stampanti e Scanner': 'Stampanti, multifunzione, scanner e plotter per casa e ufficio.',
-    'Audio e Video': 'TV, soundbar, cuffie, speaker e home entertainment per il tuo intrattenimento.',
-    'Software': 'Sistemi operativi, licenze e software gestionali per casa e azienda.',
-    'Consumabili stampa': 'Toner, cartucce e consumabili originali e compatibili per ogni stampante.',
-    'Elettrodomestici': 'Piccoli e grandi elettrodomestici per rendere la casa più smart.',
-    'Casa e Sicurezza': 'Dispositivi smart per il comfort, la qualità dell’aria e la sicurezza della casa.',
-    'Rasoi': 'Rasoi, epilatori e prodotti per la cura della persona.',
+    'Componenti PC': 'Tutto per assemblare o aggiornare il tuo computer: processori Intel e AMD, schede madri, schede video (GPU), memorie RAM DDR4 e DDR5, SSD e hard disk, alimentatori, dissipatori e case. Componenti delle migliori marche a prezzi trasparenti, con spedizione rapida in tutta Italia.',
+    'Notebook': 'Scopri la nostra selezione di notebook e portatili per ogni esigenza: ultrabook leggeri per lavoro e studio, workstation per professionisti e laptop da gaming. Le migliori marche — ASUS, HP, Lenovo, Dell e altre — con garanzia ufficiale e spedizione veloce.',
+    'Server e PC': 'Server, workstation e PC desktop affidabili per aziende, professionisti e uffici: configurazioni per virtualizzazione, storage, backup e produttività quotidiana. Prodotti delle migliori marche, con assistenza dedicata e spedizione rapida in tutta Italia.',
+    'Monitor': 'Monitor per ogni utilizzo: display Full HD e 4K per l’ufficio, schermi ultrawide per la produttività, monitor da gaming ad alta frequenza e soluzioni professionali. Le migliori marche a prezzi trasparenti, con spedizione rapida in tutta Italia.',
+    'Smartphone e Telefonia': 'Smartphone, telefoni cellulari e accessori delle migliori marche, con garanzia ufficiale italiana. Modelli top di gamma e soluzioni economiche per ogni budget, con prezzi trasparenti e spedizione veloce in tutta Italia.',
+    'Networking': 'Tutto per costruire e gestire la tua rete: switch, router, firewall, access point Wi-Fi, modem e cablaggio strutturato. Soluzioni per casa, ufficio e aziende delle migliori marche, con spedizione rapida in tutta Italia.',
+    'Stampanti e Scanner': 'Stampanti laser e inkjet, multifunzione, scanner e plotter per casa e ufficio, per ogni volume di stampa. Prodotti delle migliori marche con consumabili originali e compatibili sempre disponibili e spedizione rapida.',
+    'Audio e Video': 'TV, soundbar, cuffie, speaker e sistemi home entertainment per il massimo dell’intrattenimento. Prodotti audio e video delle migliori marche, a prezzi trasparenti e con spedizione rapida in tutta Italia.',
+    'Software': 'Sistemi operativi, licenze Microsoft Office, antivirus e software gestionali per casa e azienda. Licenze originali con attivazione garantita, assistenza dedicata e consegna digitale immediata.',
+    'Consumabili stampa': 'Toner, cartucce d’inchiostro e consumabili per stampa, originali e compatibili, per ogni modello di stampante. Qualità garantita, prezzi convenienti e spedizione rapida in tutta Italia.',
+    'Elettrodomestici': 'Piccoli e grandi elettrodomestici per rendere la casa più smart e funzionale. Prodotti delle migliori marche, a prezzi trasparenti e con spedizione rapida in tutta Italia.',
+    'Casa e Sicurezza': 'Dispositivi smart per il comfort, la qualità dell’aria e la sicurezza della casa: purificatori, sensori e soluzioni connesse. Prodotti selezionati, a prezzi trasparenti e con spedizione rapida in tutta Italia.',
+    'Rasoi': 'Rasoi elettrici, epilatori e prodotti per la cura della persona delle migliori marche. Qualità garantita, prezzi trasparenti e spedizione veloce in tutta Italia.',
   };
   function _setMeta(id, attr, val) { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); }
   function applyCatSEO(cat) {
     const sub = currentSub ? prettySub(currentSub) : '';
     const title = (sub ? sub + ' — ' : '') + cat.name + ' — ApStore';
-    const desc = CAT_DESC[cat.name] || (cat.name + ': la nostra selezione, prezzi trasparenti e spedizione rapida in tutta Italia.');
+    const desc = CAT_DESC[cat.name] || ('Scopri la selezione apStore di ' + cat.name + ': prodotti delle migliori marche, a prezzi trasparenti e con spedizione rapida in tutta Italia.');
     document.title = title;
     _setMeta('metaDesc', 'content', desc);
     _setMeta('ogTitle', 'content', title);
     _setMeta('ogDesc', 'content', desc);
     _setMeta('ogImage', 'content', cat.img || '');
     _setMeta('linkCanonical', 'href', 'https://apstore.sellpilot.it/catalogo.html?cat=' + cat.id + (currentSub ? '&sub=' + encodeURIComponent(currentSub) : ''));
-    const h = document.getElementById('catHeader'), img = document.getElementById('catHeaderImg'), d = document.getElementById('catDesc');
+    const h = document.getElementById('catHeader'), d = document.getElementById('catDesc');
     if (d) d.textContent = desc;
-    if (img) { if (cat.img) { img.src = cat.img; img.style.display = ''; } else { img.style.display = 'none'; } }
     if (h) h.hidden = false;
   }
   function renderCategories() {
