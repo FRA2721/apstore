@@ -44,6 +44,7 @@ function _rebuildCategories() {
       map.set(p.category, e);
     }
     e.count++;
+    if (!e.img && p.img) e.img = p.img;   // prima foto reale prodotto disponibile nella categoria
     if (p.sub && !e._seen[p.sub]) { e._seen[p.sub] = true; e.sub.push(p.sub); }
   });
   const arr = Array.from(map.values()).sort(function (a, b) { return b.count - a.count; });
