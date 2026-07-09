@@ -325,15 +325,15 @@ input, select, textarea { font-family: inherit; }
 .cat-nav-btn:hover { background: #000; color: #fff; box-shadow: 0 8px 28px rgba(0,0,0,.22); }
 /* ── CATEGORY CARD — Premium ── */
 .categories-grid { display: flex; gap: 24px; }
-.cat-card { background: var(--white); border: 1px solid rgba(0,0,0,.05); border-radius: 22px; box-shadow: 0 2px 18px rgba(0,0,0,.07); overflow: visible; transition: box-shadow .3s ease, transform .3s ease; cursor: pointer; max-width: 300px; width: 300px; }
+.cat-card { background: var(--white); border: 1px solid rgba(0,0,0,.05); border-radius: 22px; box-shadow: 0 2px 18px rgba(0,0,0,.07); overflow: visible; transition: box-shadow .3s ease, transform .3s ease; cursor: pointer; max-width: 270px; width: 270px; }
 .cat-card:hover { box-shadow: 0 14px 40px rgba(0,22,236,.14); transform: translateY(-5px); }
-.cat-card-img { height: 240px; border-radius: 18px; margin: -22px 16px 0; box-shadow: 0 8px 26px rgba(0,0,0,.12); display: flex; align-items: center; justify-content: center; font-size: 4.4rem; position: relative; overflow: hidden; transition: box-shadow .3s ease, transform .3s ease; }
+.cat-card-img { height: 212px; border-radius: 18px; margin: -22px 16px 0; box-shadow: 0 8px 26px rgba(0,0,0,.12); display: flex; align-items: center; justify-content: center; font-size: 4.4rem; position: relative; overflow: hidden; transition: box-shadow .3s ease, transform .3s ease; }
 .cat-card-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:2; transition:transform .4s ease; }
 .cat-card:hover .cat-card-img img { transform:scale(1.07); }
 .cat-card-img::before { content:''; position:absolute; width:90px; height:90px; border-radius:50%; border:1.5px solid rgba(255,255,255,.25); top:50%; left:50%; transform:translate(-50%,-50%); animation:ringSpinA 11s linear infinite; }
 .cat-card:hover .cat-card-img { box-shadow: 0 14px 36px rgba(0,22,236,.25); transform: translateY(-4px); }
 .cat-card-body { padding: 16px 16px 10px; }
-.cat-card-name { font-size: .9rem; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+.cat-card-name { font-size: .9rem; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
 .cat-card-count { font-size: .68rem; color: var(--text-muted); margin-bottom: 14px; letter-spacing: .02em; }
 .cat-card-link { display: flex; align-items: center; justify-content: center; gap: 0; width: 100%; background: none; color: #000; border: none; border-radius: 12px; padding: 10px 16px; font-size: .72rem; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: .07em; text-transform: uppercase; text-decoration: none; margin: 0 0 16px; overflow: hidden; transition: background .35s ease, color .35s ease; }
 .cat-card-link:hover { background: #000; color: #fff; }
