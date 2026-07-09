@@ -557,7 +557,6 @@
     renderCategories();
     render();
     if (catChanged) animateSubcats();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
   window.addEventListener('popstate', function () {
     const p = new URLSearchParams(location.search);
