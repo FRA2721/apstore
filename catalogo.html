@@ -532,15 +532,26 @@
 
   // ── Navigazione categorie senza reload + espansione smooth delle sotto-categorie ──
   function animateSubcats() {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const el = sc.querySelector('.subcats');
-    if (!el || !el.animate) return;
-    const h = el.scrollHeight;
-    el.animate([{ maxHeight: '0px', opacity: 0 }, { maxHeight: h + 'px', opacity: 1 }],
-      { duration: 340, easing: 'cubic-bezier(.16,1,.3,1)' });
-    el.querySelectorAll('li').forEach((li, i) => li.animate(
-      [{ opacity: 0, transform: 'translateX(-7px)' }, { opacity: 1, transform: 'translateX(0)' }],
-      { duration: 300, delay: 50 + i * 28, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }));
+    if (!el) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const target = el.scrollHeight;               // altezza naturale del sotto-menu
+    el.style.overflow = 'hidden';
+    el.style.maxHeight = '0px';
+    el.style.opacity = '0';
+    void el.offsetHeight;                          // forza il reflow (commit dello stato collassato)
+    el.style.transition = 'max-height .42s cubic-bezier(.16,1,.3,1), opacity .34s ease';
+    el.style.maxHeight = target + 'px';
+    el.style.opacity = '1';
+    const done = function (e) {
+      if (e && e.propertyName && e.propertyName !== 'max-height') return;
+      el.style.maxHeight = 'none';                 // libera l'altezza a fine animazione
+      el.style.transition = '';
+      el.style.opacity = '';
+      el.removeEventListener('transitionend', done);
+    };
+    el.addEventListener('transitionend', done);
+    setTimeout(done, 550);                         // fallback se transitionend non scatta
   }
   sc.addEventListener('click', function (e) {
     const a = e.target.closest('a');
