@@ -8,10 +8,11 @@
   <style>
     /* ── Override page-scoped (solo catalogo): caricato dopo lo stylesheet → vince ── */
 
-    /* Allinea titolo + breadcrumb alla stessa griglia del catalogo (container centrato) */
+    /* Allinea TUTTO a sinistra: container full-width con gutter = nav (40px) */
+    .container { max-width: none; margin: 0; padding: 0 40px; }
     .l-page-hero { padding-left: 0; padding-right: 0; }
     /* Titolo meno bold */
-    .l-page-hero h1 { font-weight: 700; }
+    .l-page-hero h1 { font-weight: 600; }
 
     /* Categorie sidebar: icone minimal + numeri senza sfondo grigio */
     .sidebar-cats a span { background: none; padding: 0; border-radius: 0; }
@@ -28,19 +29,20 @@
     input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border: 2px solid #fff; border-radius: 50%; background: var(--indigo); cursor: pointer; }
 
     /* Griglia prodotti compatta: fino a 6 card per riga (scoped su #prodGrid → home invariata) */
-    #prodGrid { grid-template-columns: repeat(6, 1fr); gap: 16px; justify-content: stretch; }
-    #prodGrid .product-card { max-width: none; border-radius: 18px; }
+    #prodGrid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; justify-content: stretch; align-items: stretch; }
+    #prodGrid .product-card { max-width: none; min-width: 0; border-radius: 18px; display: flex; flex-direction: column; }
+    #prodGrid .product-card-footer { margin-top: auto; }
     #prodGrid .product-card-img { height: 120px; margin: -12px 10px 0; border-radius: 13px; }
     #prodGrid .product-card-img::before { width: 82px; height: 82px; }
     #prodGrid .product-card-img::after { width: 54px; height: 54px; }
     #prodGrid .prod-emoji { font-size: 3rem; }
     #prodGrid .product-card-body { padding: 12px 12px 4px; }
     #prodGrid .product-category { font-size: .52rem; letter-spacing: 1px; margin-bottom: 5px; }
-    #prodGrid .product-name { font-size: .78rem; line-height: 1.35; margin-bottom: 10px; }
+    #prodGrid .product-name { font-size: .78rem; line-height: 1.35; margin-bottom: 10px; min-height: 2.1rem; }
     #prodGrid .price-now { font-size: .95rem; }
     #prodGrid .price-was { font-size: .68rem; }
     #prodGrid .product-card-footer { padding: 4px 12px 14px; }
-    #prodGrid .btn-add-cart { padding: 9px 8px; font-size: .6rem; border-radius: 11px; }
+    #prodGrid .btn-add-cart { padding: 9px 8px; font-size: .6rem; border-radius: 11px; white-space: nowrap; letter-spacing: .03em; }
     @media (max-width: 1100px) { #prodGrid { grid-template-columns: repeat(4, 1fr); } }
     @media (max-width: 820px)  { #prodGrid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 560px)  { #prodGrid { grid-template-columns: repeat(2, 1fr); } }
@@ -157,10 +159,6 @@
             <option value="rating">Valutazione</option>
             <option value="name">Nome A→Z</option>
           </select>
-          <div class="view-btns">
-            <button class="view-btn active" id="vGrid" onclick="setView('grid')" title="Griglia">▦</button>
-            <button class="view-btn"        id="vList" onclick="setView('list')" title="Lista">☰</button>
-          </div>
         </div>
       </div>
 
