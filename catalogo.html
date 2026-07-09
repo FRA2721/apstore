@@ -41,17 +41,8 @@
 
     /* @keyframes usato dall'accordion filtri mobile (.sb-body) */
     @keyframes subReveal { from { opacity: .3; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-    /* Le sotto-categorie si espandono IN-PLACE (transizione su max-height), senza reload */
+    /* le sotto-categorie appaiono con cascata via JS (Web Animations: opacity + translateY) */
     .subcats { overflow: hidden; }
-    /* apparizione morbida a cascata sulle voci */
-    .subcats-in li { animation: subItemIn .5s cubic-bezier(.16,1,.3,1) both; }
-    .subcats-in li:nth-child(1){animation-delay:.03s} .subcats-in li:nth-child(2){animation-delay:.07s}
-    .subcats-in li:nth-child(3){animation-delay:.11s} .subcats-in li:nth-child(4){animation-delay:.15s}
-    .subcats-in li:nth-child(5){animation-delay:.19s} .subcats-in li:nth-child(6){animation-delay:.23s}
-    .subcats-in li:nth-child(7){animation-delay:.27s} .subcats-in li:nth-child(8){animation-delay:.31s}
-    .subcats-in li:nth-child(n+9){animation-delay:.34s}
-    @keyframes subItemIn { from { opacity: 0; transform: translateX(-7px); } to { opacity: 1; transform: translateX(0); } }
-    @media (prefers-reduced-motion: reduce) { .subcats-in li { animation: none; } }
 
     /* Mostra tutte / mostra meno categorie */
     .sidebar-cats .cat-hidden { display: none; }
@@ -542,27 +533,16 @@
   // ── Navigazione categorie senza reload + espansione smooth delle sotto-categorie ──
   function animateSubcats() {
     const el = sc.querySelector('.subcats');
-    if (!el) return;
+    if (!el || !el.animate) return;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const target = el.scrollHeight;               // altezza naturale del sotto-menu
-    el.classList.add('subcats-in');               // attiva la cascata morbida sulle voci
-    el.style.overflow = 'hidden';
-    el.style.maxHeight = '0px';
-    el.style.transform = 'translateY(-6px)';
-    void el.offsetHeight;                          // forza il reflow (commit dello stato collassato)
-    el.style.transition = 'max-height .5s cubic-bezier(.16,1,.3,1), transform .45s cubic-bezier(.16,1,.3,1)';
-    el.style.maxHeight = target + 'px';
-    el.style.transform = 'translateY(0)';
-    const done = function (e) {
-      if (e && e.propertyName && e.propertyName !== 'max-height') return;
-      el.style.maxHeight = 'none';                 // libera l'altezza a fine animazione
-      el.style.transition = '';
-      el.style.transform = '';
-      el.classList.remove('subcats-in');
-      el.removeEventListener('transitionend', done);
-    };
-    el.addEventListener('transitionend', done);
-    setTimeout(done, 700);                         // fallback se transitionend non scatta
+    // Animo SOLO opacity + translateY (composite dalla GPU → fluide, niente jank di layout).
+    el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, easing: 'ease' });
+    el.querySelectorAll('li').forEach(function (li, i) {
+      li.animate(
+        [{ opacity: 0, transform: 'translateY(-9px)' }, { opacity: 1, transform: 'translateY(0)' }],
+        { duration: 460, delay: i * 45, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
+      );
+    });
   }
   sc.addEventListener('click', function (e) {
     const a = e.target.closest('a');
