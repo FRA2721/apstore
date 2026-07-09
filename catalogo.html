@@ -39,6 +39,24 @@
     @keyframes subItem { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
     @media (prefers-reduced-motion: reduce) { .subcats, .subcats li { animation: none; } }
 
+    /* Mostra tutte / mostra meno categorie */
+    .sidebar-cats .cat-hidden { display: none; }
+    .sidebar-cats .cat-toggle-li { border: none; }
+    .cat-toggle { width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: none; border: none; padding: 12px 0 2px; font: inherit; font-size: .78rem; font-weight: 700; color: var(--indigo); cursor: pointer; }
+    .cat-toggle:hover { opacity: .75; }
+    .cat-toggle-chev { font-size: .58rem; }
+
+    /* Accordion filtri su mobile (≤1024px, dove la sidebar si impila) */
+    .sidebar-heading { display: flex; justify-content: space-between; align-items: center; }
+    .sb-chev { display: none; }
+    @media (max-width: 1024px) {
+      .sidebar-heading { cursor: pointer; margin-bottom: 0; padding-bottom: 16px; }
+      .sb-chev { display: inline-block; font-size: .8em; color: var(--text-muted); transition: transform .25s ease; }
+      .sidebar.sb-open .sb-chev { transform: rotate(180deg); }
+      .sb-body { display: none; }
+      .sidebar.sb-open .sb-body { display: block; animation: subReveal .3s ease both; padding-top: 6px; }
+    }
+
     /* Slider prezzo: linea più sottile (3px) con thumb minimal */
     input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 3px; background: #111; border-radius: 3px; cursor: pointer; }
     input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--indigo); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); cursor: pointer; }
@@ -138,12 +156,13 @@
   <div class="catalog-wrap">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-heading">
-        Filtri
-        <button onclick="resetFilters()" style="font-size:.75rem;color:var(--indigo);font-weight:700;">Reset</button>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-heading" onclick="toggleSidebar()">
+        <span class="sb-title">Filtri <span class="sb-chev" aria-hidden="true">▾</span></span>
+        <button onclick="event.stopPropagation();resetFilters()" style="font-size:.75rem;color:var(--indigo);font-weight:700;">Reset</button>
       </div>
 
+      <div class="sb-body">
       <div class="filter-group">
         <div class="filter-group-title">Categorie</div>
         <ul class="sidebar-cats" id="sideCats"></ul>
@@ -178,6 +197,7 @@
 
       <button class="btn-apply"        onclick="applyFilters()">Applica filtri</button>
       <button class="btn-reset-filter" onclick="resetFilters()">Azzera</button>
+      </div>
     </aside>
 
     <!-- Products -->
@@ -313,6 +333,7 @@
   let currentQ    = params.get('q')     || '';
   let currentBadge= params.get('badge') || '';
   let currentSub  = params.get('sub')   || '';
+  let catsExpanded = false;
   const PAGE_SIZE = 24;
   let page = 1;
 
@@ -357,9 +378,13 @@
   }
   function renderCategories() {
     sc.innerHTML = '';
-    CATEGORIES.forEach(c => {
+    const LIMIT = 10;
+    const activeIdx = CATEGORIES.findIndex(c => c.id === currentCat);
+    const showAll = catsExpanded || (activeIdx >= LIMIT);
+    CATEGORIES.forEach((c, i) => {
       const active = currentCat === c.id;
-      let li = `<li><a href="catalogo.html?cat=${c.id}" ${active && !currentSub ? 'style="color:var(--indigo);font-weight:700;"' : ''}><span class="cat-lbl">${catIconSVG(c)}<span class="cat-name">${c.name}</span></span><span class="cat-count">${c.count}</span></a>`;
+      const hidden = !showAll && i >= LIMIT;
+      let li = `<li class="${hidden ? 'cat-hidden' : ''}"><a href="catalogo.html?cat=${c.id}" ${active && !currentSub ? 'style="color:var(--indigo);font-weight:700;"' : ''}><span class="cat-lbl">${catIconSVG(c)}<span class="cat-name">${c.name}</span></span><span class="cat-count">${c.count}</span></a>`;
       if (active && c.sub && c.sub.length) {
         li += '<ul class="subcats">';
         li += `<li><a href="catalogo.html?cat=${c.id}" class="${!currentSub ? 'active' : ''}">Tutti<span class="sub-count">${c.count}</span></a></li>`;
@@ -372,6 +397,9 @@
       }
       sc.innerHTML += li + '</li>';
     });
+    if (CATEGORIES.length > LIMIT && activeIdx < LIMIT) {
+      sc.innerHTML += `<li class="cat-toggle-li"><button type="button" class="cat-toggle" onclick="toggleCats()">${showAll ? 'Mostra meno' : 'Mostra tutte (' + CATEGORIES.length + ')'}<span class="cat-toggle-chev">${showAll ? '▲' : '▼'}</span></button></li>`;
+    }
     if (currentCat) {
       const cat = CATEGORIES.find(c => c.id === currentCat);
       if (cat) {
@@ -389,6 +417,9 @@
     }
   }
   renderCategories();
+
+  function toggleCats() { catsExpanded = !catsExpanded; renderCategories(); }
+  function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sb-open'); }
 
   function getFiltered() {
     let list = [...PRODUCTS];
