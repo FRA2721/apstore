@@ -11,8 +11,8 @@
     /* Allinea TUTTO a sinistra: container full-width con gutter = nav (40px) */
     .container { max-width: none; margin: 0; padding: 0 40px; }
     .l-page-hero { padding-left: 0; padding-right: 0; }
-    /* Titolo meno bold */
-    .l-page-hero h1 { font-weight: 600; }
+    /* Titolo molto meno bold */
+    .l-page-hero h1 { font-weight: 400; letter-spacing: -.02em; }
 
     /* Categorie sidebar: icone minimal + numeri senza sfondo grigio */
     .sidebar-cats a span { background: none; padding: 0; border-radius: 0; }
@@ -53,6 +53,22 @@
     /* Paginazione: finestra di 10 pagine + frecce prev/next */
     .page-btn.page-nav { font-weight: 700; }
     .page-btn:disabled { opacity: .35; cursor: default; pointer-events: none; }
+
+    /* Ordina: dropdown custom minimal premium (sostituisce il select nativo) */
+    .sort-sel-hidden { display: none; }
+    .sort-dd { position: relative; display: inline-block; font-size: .8rem; }
+    .sort-dd-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 210px; background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 12px; padding: 10px 14px; font: inherit; font-size: .8rem; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: border-color .2s ease, box-shadow .2s ease; }
+    .sort-dd-btn:hover { border-color: rgba(0,0,0,.24); }
+    .sort-dd.open .sort-dd-btn { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(0,22,236,.09); }
+    .sort-dd-cur::before { content: 'Ordina: '; color: var(--text-muted); font-weight: 500; }
+    .sort-dd-chev { width: 15px; height: 15px; color: var(--text-muted); transition: transform .25s ease; flex: 0 0 auto; }
+    .sort-dd.open .sort-dd-chev { transform: rotate(180deg); }
+    .sort-dd-menu { position: absolute; top: calc(100% + 8px); left: 0; right: 0; margin: 0; padding: 6px; list-style: none; background: #fff; border: 1px solid rgba(0,0,0,.07); border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.13); z-index: 60; opacity: 0; transform: translateY(-8px) scale(.98); transform-origin: top; pointer-events: none; transition: opacity .18s ease, transform .18s cubic-bezier(.16,1,.3,1); }
+    .sort-dd.open .sort-dd-menu { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .sort-dd-menu li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 9px; color: var(--text-body); cursor: pointer; white-space: nowrap; transition: background .15s ease, color .15s ease; }
+    .sort-dd-menu li:hover { background: var(--bg); color: var(--text-dark); }
+    .sort-dd-menu li.is-active { color: var(--indigo); font-weight: 700; }
+    .sort-dd-menu li.is-active::after { content: '✓'; font-size: .78rem; line-height: 1; }
   </style>
 </head>
 <body>
@@ -155,12 +171,25 @@
           <span id="activeLabel" style="color:var(--indigo);margin-left:6px;font-weight:600;"></span>
         </div>
         <div style="display:flex;gap:10px;align-items:center;">
-          <select class="sort-sel" id="sortSel" onchange="applyFilters()">
-            <option value="default">Rilevanza</option>
-            <option value="price-asc">Prezzo ↑</option>
-            <option value="price-desc">Prezzo ↓</option>
-            <option value="rating">Valutazione</option>
-            <option value="name">Nome A→Z</option>
+          <div class="sort-dd" id="sortDD">
+            <button type="button" class="sort-dd-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="sort-dd-cur" id="sortCur">Consigliati</span>
+              <svg class="sort-dd-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <ul class="sort-dd-menu" role="listbox">
+              <li role="option" data-val="default" class="is-active">Consigliati</li>
+              <li role="option" data-val="price-asc">Prezzo: dal più basso</li>
+              <li role="option" data-val="price-desc">Prezzo: dal più alto</li>
+              <li role="option" data-val="rating">Più votati</li>
+              <li role="option" data-val="name">Nome: A–Z</li>
+            </ul>
+          </div>
+          <select class="sort-sel-hidden" id="sortSel" onchange="applyFilters()" aria-hidden="true" tabindex="-1">
+            <option value="default">Consigliati</option>
+            <option value="price-asc">Prezzo: dal più basso</option>
+            <option value="price-desc">Prezzo: dal più alto</option>
+            <option value="rating">Più votati</option>
+            <option value="name">Nome: A–Z</option>
           </select>
         </div>
       </div>
@@ -346,6 +375,7 @@
     document.getElementById('priceRange').value=3000;
     document.getElementById('priceLabel').textContent='€0 – €3000';
     document.getElementById('sortSel').value='default';
+    if (window.syncSortUI) window.syncSortUI();
     applyFilters();
   }
   function setView(v) {
@@ -394,6 +424,32 @@
 <script>
 window.addEventListener('scroll',()=>{ document.getElementById('lNav').classList.toggle('scrolled',scrollY>50); },{passive:true});
 function toggleMenu(){ const m=document.getElementById('lMenu'); m.classList.toggle('open'); document.body.style.overflow=m.classList.contains('open')?'hidden':''; }
+</script>
+<script>
+/* Dropdown "Ordina" custom: sincronizza il <select> nascosto (usato da applyFilters) */
+(function(){
+  const dd = document.getElementById('sortDD');
+  if (!dd) return;
+  const btn = dd.querySelector('.sort-dd-btn');
+  const cur = document.getElementById('sortCur');
+  const sel = document.getElementById('sortSel');
+  const items = dd.querySelectorAll('.sort-dd-menu li');
+  function close(){ dd.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  window.syncSortUI = function(){
+    let label = 'Consigliati';
+    items.forEach(li => { const on = li.dataset.val === sel.value; li.classList.toggle('is-active', on); if (on) label = li.textContent.trim(); });
+    cur.textContent = label;
+  };
+  btn.addEventListener('click', () => { dd.classList.toggle('open'); btn.setAttribute('aria-expanded', dd.classList.contains('open')); });
+  items.forEach(li => li.addEventListener('click', () => {
+    sel.value = li.dataset.val;
+    window.syncSortUI();
+    close();
+    if (typeof applyFilters === 'function') applyFilters();
+  }));
+  document.addEventListener('click', e => { if (!dd.contains(e.target)) close(); });
+  window.syncSortUI();
+})();
 </script>
 </body>
 </html>
