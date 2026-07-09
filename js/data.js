@@ -83,19 +83,31 @@ var _CAT_RULES = [
   [/MOUSE|TASTIER|WEBCAM|LETTORE CODICE|ERGONOM/,             'Mouse, Tastiere e Periferiche'],
   [/PENNE|PENNARELLI|MARCATOR|EVIDENZIAT|MATITE|ROLLER|CANCELLERIA|COLLE|FORBICI|GRAFFETTE|SPILLATRIC|CUCITRIC/, 'Cancelleria e Scrittura'],
   [/QUADERNI|CARTELL|CARTONCIN|\bCARTA\b|BLOCCHI|RUBRICHE|REGISTRI|BUSTE|RACCOGLITOR|ETICHETT|ARCHIVIAZIONE|PORTALISTINI|COMUNICAZIONE VISIVA/, 'Carta e Archiviazione'],
+  [/EPILATOR|RASOI/,                                          'Rasoi'],
+  [/PREVENZIONE E SICUREZZA|PURIFICAT/,                       'Casa e Sicurezza'],
 ];
 var _CAT_ESCLUDI = /SERVIZI|GARANZIE|GARANZIA|ESTENSIONE|COSTRUZIONI|GIOCATTOL|PUZZLE|PELUCHE|TEMPERA|PASTELLI|ABBIGLIAMENT|\bDPI\b|TYVEK|GUANTI|SCARPE|CALZATUR|ELECTRIC BIKE|TELESCOP|PRODOTTI PER IL BAGNO/;
+
+// Ripulisce una famiglia grezza in nome categoria leggibile (Title Case, acronimi maiuscoli)
+function _prettyCat(s) {
+  var ACR = /^(SSD|HDD|CPU|GPU|PC|RAM|NAS|USB|UPS|LAN|WAN|LFD|DVR|NVR|PDU|TV|IT|3D|AIO|POE|KVM)$/i;
+  return (s || '').toLowerCase().split(/\s+/).map(function (w) {
+    var up = w.toUpperCase();
+    return ACR.test(up) ? up : (w.charAt(0).toUpperCase() + w.slice(1));
+  }).join(' ');
+}
 
 function _mapCategoria(famiglia, gruppo) {
   var t = (famiglia || '').toUpperCase();
   // ③ famiglia generica → usa il sotto-livello (gruppo)
   if (/^ACC(\.|ESSORI)/.test(t) && gruppo) t = (gruppo || '').toUpperCase();
-  // ① buttafuori
+  // ① buttafuori (solo non-prodotti: servizi/garanzie/estensioni)
   if (_CAT_ESCLUDI.test(t)) return null;
-  // ② parola chiave
+  // ② nome curato da regola keyword
   for (var i = 0; i < _CAT_RULES.length; i++) if (_CAT_RULES[i][0].test(t)) return _CAT_RULES[i][1];
-  // ④ non riconosciuto / fuori-perimetro → categoria dedicata visibile (non escludere)
-  return 'Altro';
+  // ④ nessuna regola: categoria dedicata AUTO-generata dalla famiglia del gestionale
+  //    (mai discarica "Altro": ogni nuovo tipo di prodotto ottiene il suo scaffale)
+  return t ? _prettyCat(t) : 'Altro';
 }
 
 // Catalogo demo rimosso (18/06/2026): il sito mostra SOLO i prodotti reali dal gestionale
