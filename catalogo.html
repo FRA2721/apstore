@@ -118,6 +118,26 @@
     .sort-dd-menu li:hover { background: var(--bg); color: var(--text-dark); }
     .sort-dd-menu li.is-active { color: var(--indigo); font-weight: 700; }
     .sort-dd-menu li.is-active::after { content: '✓'; font-size: .78rem; line-height: 1; }
+
+    /* ── Banner articoli: carosello automatico in background ── */
+    .art-banner { position: relative; display: block; height: 240px; border-radius: 20px; overflow: hidden; margin: 2px 0 8px; text-decoration: none; box-shadow: 0 10px 30px rgba(0,0,0,.14); background: #0a0a14; }
+    .art-banner-layers { position: absolute; inset: 0; }
+    .art-banner-layer { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease; }
+    .art-banner-layer.is-active { opacity: 1; animation: artZoom 6s ease forwards; }
+    @keyframes artZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+    .art-banner-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,8,20,.86) 0%, rgba(6,8,20,.55) 42%, rgba(6,8,20,.12) 100%); }
+    .art-banner-body { position: absolute; left: 34px; right: 34px; bottom: 28px; max-width: 640px; color: #fff; }
+    .art-banner-eyebrow { display: inline-block; font-size: .62rem; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; opacity: .9; margin-bottom: 10px; }
+    .art-banner-title { font-size: clamp(1.2rem, 2.3vw, 1.9rem); font-weight: 700; line-height: 1.22; margin: 0 0 12px; color: #fff; }
+    .art-banner-cta { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 700; color: #fff; transition: gap .25s ease; }
+    .art-banner:hover .art-banner-cta { gap: 13px; }
+    .art-banner-dots { position: absolute; right: 22px; top: 20px; display: flex; gap: 7px; }
+    .art-dot { width: 8px; height: 8px; padding: 0; border: none; border-radius: 50%; background: rgba(255,255,255,.45); cursor: pointer; transition: background .25s ease, width .25s ease; }
+    .art-dot.is-active { background: #fff; width: 22px; border-radius: 5px; }
+    .art-banner-title, .art-banner-eyebrow { animation: artTextIn .55s ease both; }
+    @keyframes artTextIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .art-banner-layer.is-active, .art-banner-title, .art-banner-eyebrow { animation: none; } }
+    @media (max-width: 600px) { .art-banner { height: 200px; } .art-banner-body { left: 20px; right: 20px; bottom: 20px; } .art-banner-title { margin-bottom: 8px; } }
   </style>
 </head>
 <body>
@@ -167,6 +187,20 @@
       <p class="cat-desc" id="catDesc"></p>
     </div>
   </div>
+</div>
+
+<!-- ══════════════ BANNER ARTICOLI (carosello auto in bg) ══════════════ -->
+<div class="container">
+  <a class="art-banner" id="artBanner" href="#" aria-label="Articolo in evidenza dal blog">
+    <div class="art-banner-layers" id="artLayers"></div>
+    <div class="art-banner-shade"></div>
+    <div class="art-banner-body">
+      <span class="art-banner-eyebrow" id="artEyebrow">Dal blog</span>
+      <h2 class="art-banner-title" id="artTitle"></h2>
+      <span class="art-banner-cta">Leggi l'articolo <span class="arr-h">→</span></span>
+    </div>
+    <div class="art-banner-dots" id="artDots" aria-hidden="true"></div>
+  </a>
 </div>
 
 <div class="container">
@@ -593,6 +627,49 @@ function toggleMenu(){ const m=document.getElementById('lMenu'); m.classList.tog
   }));
   document.addEventListener('click', e => { if (!dd.contains(e.target)) close(); });
   window.syncSortUI();
+})();
+</script>
+<script>
+/* Banner articoli: carosello automatico in background (crossfade) + testo sincronizzato */
+(function(){
+  const wrap = document.getElementById('artBanner');
+  if (!wrap) return;
+  if (typeof BLOG_POSTS === 'undefined' || !BLOG_POSTS.length) { wrap.style.display = 'none'; return; }
+  const posts = BLOG_POSTS.slice(0, 5);
+  const layersWrap = document.getElementById('artLayers');
+  const dotsWrap   = document.getElementById('artDots');
+  const titleEl    = document.getElementById('artTitle');
+  const eyebrowEl  = document.getElementById('artEyebrow');
+  const big = u => (u || '').replace(/w=\d+&h=\d+/, 'w=1400&h=480');
+  posts.forEach(function (p, i) {
+    const l = document.createElement('div');
+    l.className = 'art-banner-layer';
+    l.style.backgroundImage = 'url("' + big(p.img) + '")';
+    layersWrap.appendChild(l);
+    const d = document.createElement('button');
+    d.type = 'button'; d.className = 'art-dot';
+    d.setAttribute('aria-label', 'Vai all\'articolo ' + (i + 1));
+    d.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); go(i); });
+    dotsWrap.appendChild(d);
+  });
+  const layerEls = layersWrap.children, dotEls = dotsWrap.children;
+  let idx = -1, timer = null;
+  function paint() {
+    for (let i = 0; i < posts.length; i++) {
+      layerEls[i].classList.toggle('is-active', i === idx);
+      dotEls[i].classList.toggle('is-active', i === idx);
+    }
+    const p = posts[idx];
+    titleEl.textContent = p.title;
+    eyebrowEl.textContent = 'Dal blog · ' + p.category;
+    wrap.setAttribute('href', 'articolo.html?id=' + p.id);
+    [titleEl, eyebrowEl].forEach(function (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+  }
+  function go(i) { idx = (i + posts.length) % posts.length; paint(); arm(); }
+  function arm() { clearInterval(timer); timer = setInterval(function () { go(idx + 1); }, 4800); }
+  go(0);
+  wrap.addEventListener('mouseenter', function () { clearInterval(timer); });
+  wrap.addEventListener('mouseleave', arm);
 })();
 </script>
 </body>
