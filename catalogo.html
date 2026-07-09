@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catalogo Prodotti — ApStore</title>
+  <meta name="description" id="metaDesc" content="ApStore — il tech store italiano: notebook, componenti PC, monitor, networking e molto altro. Prodotti selezionati, prezzi trasparenti, spedizione rapida in tutta Italia.">
+  <link rel="canonical" id="linkCanonical" href="https://apstore.sellpilot.it/catalogo.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ApStore">
+  <meta property="og:title" id="ogTitle" content="Catalogo — ApStore">
+  <meta property="og:description" id="ogDesc" content="Il tech store italiano. Prodotti selezionati, prezzi trasparenti, spedizione rapida.">
+  <meta property="og:image" id="ogImage" content="">
   <link rel="stylesheet" href="css/style.css">
   <style>
     /* ── Override page-scoped (solo catalogo): caricato dopo lo stylesheet → vince ── */
@@ -27,6 +34,12 @@
     .subcats a:hover { color: var(--indigo); }
     .subcats a.active { color: var(--indigo); font-weight: 700; }
     .subcats a .sub-count { font-size: .66rem; color: var(--text-muted); }
+    /* Header categoria: immagine rappresentativa + descrizione */
+    .cat-header { display: flex; align-items: center; gap: 18px; margin-top: 18px; max-width: 780px; }
+    .cat-header-img { width: 84px; height: 84px; flex: 0 0 84px; border-radius: 16px; object-fit: cover; box-shadow: 0 6px 20px rgba(0,0,0,.12); background: #fff; }
+    .cat-desc { font-size: .95rem; line-height: 1.55; color: var(--text-body); margin: 0; }
+    @media (max-width: 560px) { .cat-header { gap: 12px; } .cat-header-img { width: 60px; height: 60px; flex-basis: 60px; } .cat-desc { font-size: .88rem; } }
+
     /* Comparsa smooth delle sotto-categorie (scaffolding): container slide + item cascade */
     .subcats { animation: subReveal .34s cubic-bezier(.16,1,.3,1) both; }
     @keyframes subReveal { from { opacity: .3; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
@@ -148,6 +161,10 @@
     <div class="l-breadcrumb">
       <a href="index.html">Home</a><span>›</span>
       <span id="breadCur">Catalogo</span>
+    </div>
+    <div class="cat-header" id="catHeader" hidden>
+      <img class="cat-header-img" id="catHeaderImg" alt="" loading="lazy" onerror="this.style.display='none'">
+      <p class="cat-desc" id="catDesc"></p>
     </div>
   </div>
 </div>
@@ -376,6 +393,38 @@
       return ACR.test(up) ? up : (w.charAt(0).toUpperCase() + w.slice(1));
     }).join(' ');
   }
+  // Descrizioni curate per categoria (SEO + UX); fallback automatico per le altre
+  const CAT_DESC = {
+    'Componenti PC': 'CPU, schede madri, GPU, RAM, storage, alimentatori e case per assemblare o potenziare il tuo PC.',
+    'Notebook': 'Portatili per lavoro, studio e gaming: ultrabook, workstation e 2-in-1 delle migliori marche.',
+    'Server e PC': 'Server, workstation e PC desktop affidabili per aziende e professionisti.',
+    'Monitor': 'Monitor per ufficio, gaming e produttività: Full HD, 4K, ultrawide e professionali.',
+    'Smartphone e Telefonia': 'Smartphone, telefoni e accessori delle migliori marche, con garanzia ufficiale.',
+    'Networking': 'Switch, router, firewall, access point e cablaggio per costruire una rete solida.',
+    'Stampanti e Scanner': 'Stampanti, multifunzione, scanner e plotter per casa e ufficio.',
+    'Audio e Video': 'TV, soundbar, cuffie, speaker e home entertainment per il tuo intrattenimento.',
+    'Software': 'Sistemi operativi, licenze e software gestionali per casa e azienda.',
+    'Consumabili stampa': 'Toner, cartucce e consumabili originali e compatibili per ogni stampante.',
+    'Elettrodomestici': 'Piccoli e grandi elettrodomestici per rendere la casa più smart.',
+    'Casa e Sicurezza': 'Dispositivi smart per il comfort, la qualità dell’aria e la sicurezza della casa.',
+    'Rasoi': 'Rasoi, epilatori e prodotti per la cura della persona.',
+  };
+  function _setMeta(id, attr, val) { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); }
+  function applyCatSEO(cat) {
+    const sub = currentSub ? prettySub(currentSub) : '';
+    const title = (sub ? sub + ' — ' : '') + cat.name + ' — ApStore';
+    const desc = CAT_DESC[cat.name] || (cat.name + ': la nostra selezione, prezzi trasparenti e spedizione rapida in tutta Italia.');
+    document.title = title;
+    _setMeta('metaDesc', 'content', desc);
+    _setMeta('ogTitle', 'content', title);
+    _setMeta('ogDesc', 'content', desc);
+    _setMeta('ogImage', 'content', cat.img || '');
+    _setMeta('linkCanonical', 'href', 'https://apstore.sellpilot.it/catalogo.html?cat=' + cat.id + (currentSub ? '&sub=' + encodeURIComponent(currentSub) : ''));
+    const h = document.getElementById('catHeader'), img = document.getElementById('catHeaderImg'), d = document.getElementById('catDesc');
+    if (d) d.textContent = desc;
+    if (img) { if (cat.img) { img.src = cat.img; img.style.display = ''; } else { img.style.display = 'none'; } }
+    if (h) h.hidden = false;
+  }
   function renderCategories() {
     sc.innerHTML = '';
     const LIMIT = 10;
@@ -407,6 +456,7 @@
         document.getElementById('breadCur').textContent  = currentSub ? cat.name + ' › ' + prettySub(currentSub) : cat.name;
         const al = document.getElementById('activeLabel');
         if (al) al.textContent = currentSub ? '· ' + prettySub(currentSub) : '';
+        applyCatSEO(cat);
       }
     } else if (currentQ) {
       document.getElementById('pageTitle').textContent = `Risultati: "${currentQ}"`;
