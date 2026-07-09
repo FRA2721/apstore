@@ -26,6 +26,28 @@
     input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--indigo); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25); cursor: pointer; }
     input[type=range]::-moz-range-track { height: 3px; background: #111; border-radius: 3px; }
     input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border: 2px solid #fff; border-radius: 50%; background: var(--indigo); cursor: pointer; }
+
+    /* Griglia prodotti compatta: fino a 6 card per riga (scoped su #prodGrid → home invariata) */
+    #prodGrid { grid-template-columns: repeat(6, 1fr); gap: 16px; justify-content: stretch; }
+    #prodGrid .product-card { max-width: none; border-radius: 18px; }
+    #prodGrid .product-card-img { height: 120px; margin: -12px 10px 0; border-radius: 13px; }
+    #prodGrid .product-card-img::before { width: 82px; height: 82px; }
+    #prodGrid .product-card-img::after { width: 54px; height: 54px; }
+    #prodGrid .prod-emoji { font-size: 3rem; }
+    #prodGrid .product-card-body { padding: 12px 12px 4px; }
+    #prodGrid .product-category { font-size: .52rem; letter-spacing: 1px; margin-bottom: 5px; }
+    #prodGrid .product-name { font-size: .78rem; line-height: 1.35; margin-bottom: 10px; }
+    #prodGrid .price-now { font-size: .95rem; }
+    #prodGrid .price-was { font-size: .68rem; }
+    #prodGrid .product-card-footer { padding: 4px 12px 14px; }
+    #prodGrid .btn-add-cart { padding: 9px 8px; font-size: .6rem; border-radius: 11px; }
+    @media (max-width: 1100px) { #prodGrid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 820px)  { #prodGrid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 560px)  { #prodGrid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* Paginazione: finestra di 10 pagine + frecce prev/next */
+    .page-btn.page-nav { font-weight: 700; }
+    .page-btn:disabled { opacity: .35; cursor: default; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -243,7 +265,7 @@
   let currentCat  = params.get('cat')   || '';
   let currentQ    = params.get('q')     || '';
   let currentBadge= params.get('badge') || '';
-  const PAGE_SIZE = 9;
+  const PAGE_SIZE = 24;
   let page = 1;
 
   // Sidebar categories + titolo pagina — ricostruibili (le categorie arrivano
@@ -346,9 +368,23 @@
          </div>`;
     const pg = document.getElementById('pagination');
     pg.innerHTML = '';
-    if (pages>1) for(let i=1;i<=pages;i++) pg.innerHTML+=`<button class="page-btn${i===page?' active':''}" onclick="goPage(${i})">${i}</button>`;
+    if (pages > 1) {
+      const WIN = 10;                                   // 10 pagine visibili al centro
+      let start = Math.max(1, page - Math.floor(WIN / 2));
+      let end   = Math.min(pages, start + WIN - 1);
+      start = Math.max(1, end - WIN + 1);               // riempi la finestra anche a fine lista
+      let h = `<button class="page-btn page-nav" onclick="goPage(${page - 1})" ${page === 1 ? 'disabled' : ''} aria-label="Pagina precedente">‹</button>`;
+      for (let i = start; i <= end; i++)
+        h += `<button class="page-btn${i === page ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
+      h += `<button class="page-btn page-nav" onclick="goPage(${page + 1})" ${page === pages ? 'disabled' : ''} aria-label="Pagina successiva">›</button>`;
+      pg.innerHTML = h;
+    }
   }
-  function goPage(n) { page=n; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  function goPage(n) {
+    const pages = Math.ceil(getFiltered().length / PAGE_SIZE);
+    if (n < 1 || n > pages) return;
+    page = n; render(); window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   render();
   // Callback richiamati da data.js quando arrivano prodotti/categorie dall'API SellPilot
   window.__apstoreRender = function() { render(); };
